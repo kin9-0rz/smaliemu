@@ -20,6 +20,7 @@
 from smali.opcodes import *
 from smali.vm import VM
 from smali.source import Source
+from smali.snippet import Snippet
 from smali.preprocessors import *
 
 import sys
@@ -47,12 +48,14 @@ class Emulator(object):
         self.vm      = None
         # Instance of the source file.
         self.source  = None
+        self.snippet = None
         # Instance of the statistics object.
         self.stats   = None
         # Code preprocessors.
         self.preprocessors = [
             TryCatchPreprocessor,
-            PackedSwitchPreprocessor
+            PackedSwitchPreprocessor,
+            ArrayDataPreprocessor
         ]
         # Opcodes handlers.
         self.opcodes = []
@@ -63,14 +66,14 @@ class Emulator(object):
             if entry.startswith('op_'):
                 self.opcodes.append( globals()[entry]() )
 
-    def __preprocess(self):
+    def __preprocess(self, smali_code):
         """
         Start the preprocessing phase which will save all the labels and their line index
         for fast lookups while jumping and will pre parse all the try/catch directives.
         """
         next_line = None
-        self.source.lines = list(map( str.strip, self.source.lines ))
-        for index, line in enumerate(self.source.lines):
+        smali_code.lines = list(map( str.strip, smali_code.lines ))
+        for index, line in enumerate(smali_code.lines):
             # we're inside a block which was already processed
             if next_line is not None and index <= next_line:
                 next_line = None if index == next_line else next_line
@@ -86,7 +89,7 @@ class Emulator(object):
                 processed = False
                 for preproc in self.preprocessors:
                     if preproc.check(line):
-                        next_line = preproc.process( self.vm, line, index, self.source.lines )
+                        next_line = preproc.process( self.vm, line, index, smali_code.lines )
                         processed = True
 
                 # no preprocessor found, this is a normal label
@@ -118,11 +121,13 @@ class Emulator(object):
         print()
         print("-------------------------")
         print("Fatal error on line %03d:\n" % self.vm.pc)
-
-        print("  %03d %s" % (self.vm.pc, self.source[self.vm.pc - 1]))
+        if self.source:
+            print("  %03d %s" % (self.vm.pc, self.source[self.vm.pc - 1]))
+        elif self.snippet:
+            print("  %03d %s" % (self.vm.pc, self.snippet[self.vm.pc - 1]))
 
         print("\n%s" % message)
-        quit()
+        sys.exit()
 
     def run(self, filename, args = {}, trace=False):
         """
@@ -141,7 +146,7 @@ class Emulator(object):
 
         s = time.time() * 1000
         # Preprocess labels and try/catch blocks for fast lookup.
-        self.__preprocess()
+        self.__preprocess(self.source)
         e = time.time() * 1000
         self.stats.preproc = e - s
 
@@ -157,6 +162,46 @@ class Emulator(object):
 
             elif self.__parse_line(line) is False:
                 self.fatal( "Unsupported opcode." )
+
+        e = time.time() * 1000
+        self.stats.execution = e - s
+
+        return self.vm.return_v
+
+
+    def call(self, snippet, trace=False):
+        """
+        Load a smali file and start emulating it.
+        :param filename: The path of the file to load and emulate.
+        :param args: A dictionary of optional initialization variables for the VM, mostly used for arguments.
+        :param trace: If true every opcode being executed will be printed.
+        :return: The return value of the emulated method or None if no return-* opcode was executed.
+        """
+        OpCode.trace = trace
+        self.snippet = Snippet(snippet)
+        self.vm     = VM(self)
+        self.stats  = Stats(self)
+
+        self.vm.variables.copy()
+
+        s = time.time() * 1000
+        # Preprocess labels and try/catch blocks for fast lookup.
+        self.__preprocess(self.snippet)
+        e = time.time() * 1000
+        self.stats.preproc = e - s
+
+        s = time.time() * 1000
+        # Loop each line and emulate.
+        while self.vm.stop is False and self.snippet.has_line(self.vm.pc):
+            self.stats.steps += 1
+            line = self.snippet[self.vm.pc]
+            self.vm.pc += 1
+
+            if self.__should_skip_line(line):
+                continue
+
+            elif self.__parse_line(line) is False:
+                self.fatal("Unsupported opcode." )
 
         e = time.time() * 1000
         self.stats.execution = e - s

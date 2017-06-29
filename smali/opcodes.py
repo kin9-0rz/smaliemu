@@ -27,10 +27,12 @@ class OpCode(object):
 
     @staticmethod
     def get_int_value(val):
-        if "0x" in val:
-            return int( val, 16 )
+        if val.startswith('0x') and val.endswith('t'):
+            return int(val[:-1], 16)
+        elif "0x" in val:
+            return int(val, 16)
         else:
-            return int( val )
+            return int(val)
 
     def parse(self, line, vm):
         m = self.expression.search(line)
@@ -202,6 +204,14 @@ class op_ArrayLength(OpCode):
     @staticmethod
     def eval(vm, vx, vy):
         vm[vx] = len(vm[vy])
+
+class op_ArrayFillData(OpCode):
+    def __init__(self):
+        OpCode.__init__(self, 'fill-array-data (.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, label):
+        vm[vx] = vm.array_data[label]["elements"]
 
 class op_Aget(OpCode):
     def __init__(self):

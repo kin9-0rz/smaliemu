@@ -1,2 +1,2 @@
-python examples\decryptor.py
 python tests\run.py
+python examples\decryptor.py

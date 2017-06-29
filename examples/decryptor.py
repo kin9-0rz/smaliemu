@@ -32,9 +32,59 @@ args = {
     'p1': 19
 }
 
-ret = emu.run( filename, args )
+ret = emu.run(filename, args)
 
 print(emu.stats)
 
 print("RESULT:\n")
+print("'%s'" % ret)
+
+emu2 = Emulator()
+snippet = ['const/4 v1, 0x0', 'const-string v2, "z"', 'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
+ret = emu2.call(snippet)
+print("'%s'" % ret)
+
+# snippet = [
+#     'const/4 v2, 0x1',
+#     'const/4 v3, 0x0',
+#     'new-instance v0, Ljava/lang/String;',
+#     'new-array v1, v2, [C',
+#     'const/16 v2, 0x61',
+#     'aput-char v2, v1, v3',
+#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([C)V'
+# ]
+# ret = emu2.call(snippet)
+# print("'%s'" % ret)
+
+snippet = [
+    'const/4 v4, 0x1',
+    'const/4 v3, 0x0',
+    'new-instance v0, Ljava/lang/String;',
+    'new-array v1, v4, [B',
+    'const/16 v2, 0x44',
+    'aput-byte v2, v1, v3',
+    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
+    'return-object v0'
+]
+ret = emu2.call(snippet)
+print("'%s'" % ret)
+
+
+snippet = [
+    'const/4 v4, 0x1',
+    'const/4 v3, 0x0',
+    'new-instance v0, Ljava/lang/String;',
+    'const/4 v1, 0x2',
+    'new-array v1, v1, [B',
+    'fill-array-data v1, :array_5a',
+    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
+    'return-object v0',
+    ':array_5a',
+    '.array-data 1',
+        '0x44t',
+        '0x45t',
+    '.end array-data'
+
+]
+ret = emu2.call(snippet)
 print("'%s'" % ret)

@@ -27,6 +27,7 @@ class String:
     def methods():
         return {
             'new-instance': String.new_instance,
+            '<init>([B)V': String.init_from_byte_array,
             '<init>([C)V': String.init_from_char_array,
             'charAt(I)C': String.charat,
             'toCharArray()[C': String.tochararray,
@@ -40,6 +41,15 @@ class String:
     @staticmethod
     def new_instance():
         return ""
+
+    @staticmethod
+    def init_from_byte_array(vm, this, args):
+        print(args)
+        print(vm[args[0]])
+        chs = []
+        for item in vm[args[0]]:
+            chs.append(chr(item))
+        vm[this] = "".join(chs)
 
     @staticmethod
     def init_from_char_array(vm, this, args):
