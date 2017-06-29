@@ -17,7 +17,7 @@
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 import re
-from smali.opcodes import OpCode
+from smaliemu.opcodes import OpCode
 
 # Preprocess try/catch blocks.
 class TryCatchPreprocessor:

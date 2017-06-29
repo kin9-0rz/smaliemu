@@ -20,7 +20,7 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from smali.emulator import Emulator
+from smaliemu.emulator import Emulator
 
 emu = Emulator()
 
@@ -43,18 +43,6 @@ emu2 = Emulator()
 snippet = ['const/4 v1, 0x0', 'const-string v2, "z"', 'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
 ret = emu2.call(snippet)
 print("'%s'" % ret)
-
-# snippet = [
-#     'const/4 v2, 0x1',
-#     'const/4 v3, 0x0',
-#     'new-instance v0, Ljava/lang/String;',
-#     'new-array v1, v2, [C',
-#     'const/16 v2, 0x61',
-#     'aput-char v2, v1, v3',
-#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([C)V'
-# ]
-# ret = emu2.call(snippet)
-# print("'%s'" % ret)
 
 snippet = [
     'const/4 v4, 0x1',

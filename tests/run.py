@@ -21,7 +21,7 @@ from collections import OrderedDict
 import sys, os, fnmatch, time, traceback
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from smali.emulator import Emulator
+from smaliemu.emulator import Emulator
 
 
 

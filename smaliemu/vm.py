@@ -17,7 +17,7 @@
 # program. If not, go to http://www.gnu.org/licenses/gpl.html
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-from smali.object_mapping import ObjectMapping
+from smaliemu.object_mapping import ObjectMapping
 
 # The virtual machine used by the emulator.
 class VM(object):

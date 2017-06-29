@@ -44,8 +44,6 @@ class String:
 
     @staticmethod
     def init_from_byte_array(vm, this, args):
-        print(args)
-        print(vm[args[0]])
         chs = []
         for item in vm[args[0]]:
             chs.append(chr(item))

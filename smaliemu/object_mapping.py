@@ -17,8 +17,8 @@
 # program. If not, go to http://www.gnu.org/licenses/gpl.html
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-from smali.objects.string import String
-from smali.objects.string_builder import StringBuilder
+from smaliemu.objects.string import String
+from smaliemu.objects.string_builder import StringBuilder
 
 # This class holds the mapping of Java objects and methods to their Python respective.
 class ObjectMapping(object):

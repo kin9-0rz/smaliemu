@@ -17,11 +17,11 @@
 # program. If not, go to http://www.gnu.org/licenses/gpl.html
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-from smali.opcodes import *
-from smali.vm import VM
-from smali.source import Source
-from smali.snippet import Snippet
-from smali.preprocessors import *
+from smaliemu.opcodes import *
+from smaliemu.vm import VM
+from smaliemu.source import Source
+from smaliemu.snippet import Snippet
+from smaliemu.preprocessors import *
 
 import sys
 import time
@@ -62,7 +62,7 @@ class Emulator(object):
 
         # Dynamically load opcode handlers.
         # TODO: Implement missing opcodes.
-        for entry in dir( sys.modules['smali.opcodes'] ):
+        for entry in dir( sys.modules['smaliemu.opcodes'] ):
             if entry.startswith('op_'):
                 self.opcodes.append( globals()[entry]() )
 
