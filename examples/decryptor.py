@@ -32,47 +32,107 @@ args = {
     'p1': 19
 }
 
-ret = emu.run(filename, args)
-
-print(emu.stats)
-
-print("RESULT:\n")
-print("'%s'" % ret)
+# ret = emu.run(filename, args)
+# print(emu.stats)
+# print("RESULT:\n")
+# print("'%s'" % ret)
 
 emu2 = Emulator()
-snippet = ['const/4 v1, 0x0', 'const-string v2, "z"', 'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
-ret = emu2.call(snippet)
-print("'%s'" % ret)
+#
+# snippet = ['const/4 v1, 0x0', 'const-string v2, "z"', 'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
+# ret = emu2.call(snippet)
+# print("'%s'" % ret)
+#
+# snippet = [
+#     'const/4 v4, 0x1',
+#     'const/4 v3, 0x0',
+#     'new-instance v0, Ljava/lang/String;',
+#     'new-array v1, v4, [B',
+#     'const/16 v2, 0x44',
+#     'aput-byte v2, v1, v3',
+#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
+#     'return-object v0'
+# ]
+# ret = emu2.call(snippet)
+# print("'%s'" % ret)
+
+#
+# snippet = [
+#     'const/4 v4, 0x1',
+#     'const/4 v3, 0x0',
+#     'new-instance v0, Ljava/lang/String;',
+#     'const/4 v1, 0x2',
+#     'new-array v1, v1, [B',
+#     'fill-array-data v1, :array_5a',
+#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
+#     'return-object v0',
+#     ':array_5a',
+#     '.array-data 1',
+#         '0x44t',
+#         '0x45t',
+#     '.end array-data'
+#
+# ]
+# ret = emu2.call(snippet)
+# print("'%s'" % ret)
 
 snippet = [
-    'const/4 v4, 0x1',
-    'const/4 v3, 0x0',
-    'new-instance v0, Ljava/lang/String;',
-    'new-array v1, v4, [B',
-    'const/16 v2, 0x44',
-    'aput-byte v2, v1, v3',
-    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
-    'return-object v0'
+    'const/4 v4, 0x0',
+    'new-instance v4, Ljava/lang/StringBuilder;',
+    'const-string v5, "test_value_of"',
+    'invoke-static {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+    'move-result-object v5',
+    'invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+    'return-object v4'
 ]
 ret = emu2.call(snippet)
-print("'%s'" % ret)
-
+print("Result : %s\n" % ret)
 
 snippet = [
-    'const/4 v4, 0x1',
-    'const/4 v3, 0x0',
-    'new-instance v0, Ljava/lang/String;',
-    'const/4 v1, 0x2',
-    'new-array v1, v1, [B',
-    'fill-array-data v1, :array_5a',
-    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
-    'return-object v0',
-    ':array_5a',
-    '.array-data 1',
-        '0x44t',
-        '0x45t',
-    '.end array-data'
+    # 'const/4 v4, 0x0',
+    'new-instance v4, Ljava/lang/StringBuilder;',
+    'const-string v5, "a"',
+    'invoke-static {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+    'move-result-object v5',
+    'invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+    'const-string v5, "h"',
+    'invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+    'return-object v4'
 
 ]
 ret = emu2.call(snippet)
-print("'%s'" % ret)
+print("Result : %s" % ret)
+#
+# import sys
+# sys.exit()
+#
+# snippet = [
+#     '    new-instance v4, Ljava/lang/StringBuilder;',
+#     '    const-string v5, "c"',
+#     '    invoke-static {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+#     '    move-result-object v5',
+#     '    invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+#     '    const-string v5, "h"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    const-string v5, "e"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    const-string v5, "c"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    const-string v5, "k"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    const-string v5, "e"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    const-string v5, "r"',
+#     '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+#     '    move-result-object v4',
+#     '    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;',
+#     '   return-object v4'
+#     ]
+#
+# ret = emu2.call(snippet)
+# print("'%s'" % ret)

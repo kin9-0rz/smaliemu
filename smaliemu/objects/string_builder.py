@@ -28,6 +28,7 @@ class StringBuilder:
         return {
             'new-instance': StringBuilder.new_instance,
             '<init>()V': StringBuilder.init,
+            '<init>(Ljava/lang/String;)V': StringBuilder.init_from_string,
             'append(Ljava/lang/String;)Ljava/lang/StringBuilder;': StringBuilder.append,
             'append(C)Ljava/lang/StringBuilder;': StringBuilder.append,
             'toString()Ljava/lang/String;': StringBuilder.tostring
@@ -40,6 +41,10 @@ class StringBuilder:
     @staticmethod
     def init(vm, this, args):
         pass
+
+    def init_from_string(vm, this, args):
+        vm.return_v = vm[args[0]]
+        vm[this] = vm[args[0]]
 
     @staticmethod
     def append(vm, this, args):

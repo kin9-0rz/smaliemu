@@ -70,7 +70,7 @@ class ObjectMapping(object):
         class_name = self.__demangle_class_name( vm, klass )
         if class_name in self.mapping:
             if method_name in self.mapping[class_name]:
-                invokeResult = self.mapping[class_name][method_name]( vm, this, args )
+                invokeResult = self.mapping[class_name][method_name](vm, this, args)
                 if not invokeResult is None:
                     vm.return_v = invokeResult
 

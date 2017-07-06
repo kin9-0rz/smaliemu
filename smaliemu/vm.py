@@ -53,8 +53,8 @@ class VM(object):
     def __setitem__(self, name, value):
         self.variables[name] = value
 
-    def fatal(self, message):
-        self.emu.fatal(message)
+    # def fatal(self, message):
+    #     self.emu.fatal(message)
 
     def goto(self, label):
         self.pc = self.labels[label]
@@ -70,7 +70,8 @@ class VM(object):
                 return
 
         # nope, report unhandled exception
-        self.emu.fatal("Unhandled exception '%s'." % str(e) )
+        self.emu.fatal("Unhandled exception '%s'." % str(e))
+
 
     def new_instance(self, klass):
         return self.mapping.new_instance(self, klass)

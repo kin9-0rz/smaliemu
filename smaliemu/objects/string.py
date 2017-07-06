@@ -31,7 +31,8 @@ class String:
             '<init>([C)V': String.init_from_char_array,
             'charAt(I)C': String.charat,
             'toCharArray()[C': String.tochararray,
-            'intern()Ljava/lang/String;': String.repr_intern
+            'intern()Ljava/lang/String;': String.repr_intern,
+            'valueOf(Ljava/lang/Object;)Ljava/lang/String;': String.valueof
         }
 
     @staticmethod
@@ -62,3 +63,7 @@ class String:
     @staticmethod
     def tochararray(vm, this, args):
         vm.return_v = list(vm[this])
+
+    @staticmethod
+    def valueof(vm, this, args):
+        vm.return_v = vm[this]

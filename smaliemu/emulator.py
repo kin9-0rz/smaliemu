@@ -127,7 +127,12 @@ class Emulator(object):
             print("  %03d %s" % (self.vm.pc, self.snippet[self.vm.pc - 1]))
 
         print("\n%s" % message)
-        sys.exit()
+
+    def get_error_line(self):
+        if self.source:
+            return "  %03d %s" % (self.vm.pc, self.source[self.vm.pc - 1])
+        elif self.snippet:
+            return "  %03d %s" % (self.vm.pc, self.snippet[self.vm.pc - 1])
 
     def run(self, filename, args = {}, trace=False):
         """
@@ -161,7 +166,7 @@ class Emulator(object):
                 continue
 
             elif self.__parse_line(line) is False:
-                self.fatal( "Unsupported opcode." )
+                self.fatal("UnsupportedOpcodeError")
 
         e = time.time() * 1000
         self.stats.execution = e - s
@@ -181,6 +186,7 @@ class Emulator(object):
         self.snippet = Snippet(snippet)
         self.vm     = VM(self)
         self.stats  = Stats(self)
+        self.vm.return_v = None
 
         self.vm.variables.copy()
 
@@ -201,9 +207,18 @@ class Emulator(object):
                 continue
 
             elif self.__parse_line(line) is False:
-                self.fatal("Unsupported opcode." )
+                # 只要有一条指令出错都应该停止执行
+                raise UnsupportedOpcodeError(self.get_error_line())
 
         e = time.time() * 1000
         self.stats.execution = e - s
 
         return self.vm.return_v
+
+
+class UnsupportedOpcodeError(RuntimeError):
+    def __init__(self, msg):
+        self.message = msg
+
+    def __str__(self):
+        return self.message
