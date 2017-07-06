@@ -70,7 +70,8 @@ class VM(object):
                 return
 
         # nope, report unhandled exception
-        self.emu.fatal("Unhandled exception '%s'." % str(e))
+        # self.emu.fatal("Unhandled exception '%s'." % str(e))
+        # raise RuntimeError("Unhandled exception '%s'." % str(e))
 
 
     def new_instance(self, klass):

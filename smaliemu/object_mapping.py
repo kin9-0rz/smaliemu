@@ -37,7 +37,8 @@ class ObjectMapping(object):
         :return: The demangled class name.
         """
         if name[0] != 'L':
-            vm.emu.fatal("'%s' does not name a class." % name)
+            # vm.emu.fatal("'%s' does not name a class." % name)
+            raise RuntimeError("'%s' does not name a class." % name)
         return name[1:].replace('/', '.').replace(';', '')
 
     def new_instance(self, vm, klass):
@@ -54,9 +55,11 @@ class ObjectMapping(object):
                 return self.mapping[class_name]['new-instance']()
 
             else:
-                vm.emu.fatal("Unsupported method 'new-instance' for class '%s'." % class_name)
+                raise RuntimeError("Unsupported method 'new-instance' for class '%s'." % class_name)
+                # vm.emu.fatal("Unsupported method 'new-instance' for class '%s'." % class_name)
         else:
-            vm.emu.fatal("Unsupported class '%s'." % class_name)
+            raise RuntimeError("Unsupported class '%s'." % class_name)
+            # vm.emu.fatal("Unsupported class '%s'." % class_name)
 
     def invoke(self, vm, this, klass, method_name, args):
         """
@@ -75,6 +78,8 @@ class ObjectMapping(object):
                     vm.return_v = invokeResult
 
             else:
-                vm.emu.fatal("Unsupported method '%s' for class '%s'." % ( method_name, class_name ))
+                # vm.emu.fatal("Unsupported method '%s' for class '%s'." % ( method_name, class_name ))
+                raise RuntimeError("Unsupported method '%s' for class '%s'." % ( method_name, class_name ))
         else:
-            vm.emu.fatal("Unsupported class '%s'." % class_name)
+            # vm.emu.fatal("Unsupported class '%s'." % class_name)
+            raise RuntimeError("Unsupported class '%s'." % class_name)

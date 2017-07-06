@@ -69,7 +69,8 @@ class PackedSwitchPreprocessor:
                 break
 
             else:
-                vm.fatal("Unexpected line '%s' while preprocessing packed-switch." % nline)
+                # vm.fatal("Unexpected line '%s' while preprocessing packed-switch." % nline)
+                raise RuntimeError("Unexpected line '%s' while preprocessing packed-switch." % nline)
 
         vm.packed_switches[name] = pswitch
 

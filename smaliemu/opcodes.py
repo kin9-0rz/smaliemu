@@ -369,7 +369,8 @@ class op_IntToType(OpCode):
             vm[vx] = chr( vm[vy] & 0xFF )
 
         else:
-            vm.emu.fatal( "Unsupported type '%s'." % ctype )
+            # vm.emu.fatal( "Unsupported type '%s'." % ctype )
+            raise RuntimeError( "Unsupported type '%s'." % ctype )
 
 class op_SPut(OpCode):
     def __init__(self):
@@ -405,7 +406,8 @@ class op_Return(OpCode):
             vm.stop = True
 
         else:
-            vm.emu.fatal( "Unsupported return type." )
+            # vm.emu.fatal( "Unsupported return type." )
+            raise RuntimeError( "Unsupported return type." )
 
 class op_RemIntLit(OpCode):
     def __init__(self):

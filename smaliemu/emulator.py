@@ -166,7 +166,7 @@ class Emulator(object):
                 continue
 
             elif self.__parse_line(line) is False:
-                self.fatal("UnsupportedOpcodeError")
+                raise UnsupportedOpcodeError(self.get_error_line())
 
         e = time.time() * 1000
         self.stats.execution = e - s
@@ -208,17 +208,10 @@ class Emulator(object):
 
             elif self.__parse_line(line) is False:
                 # 只要有一条指令出错都应该停止执行
+                from smaliemu.exception import UnsupportedOpcodeError
                 raise UnsupportedOpcodeError(self.get_error_line())
 
         e = time.time() * 1000
         self.stats.execution = e - s
 
         return self.vm.return_v
-
-
-class UnsupportedOpcodeError(RuntimeError):
-    def __init__(self, msg):
-        self.message = msg
-
-    def __str__(self):
-        return self.message
