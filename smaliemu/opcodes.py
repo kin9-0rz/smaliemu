@@ -67,7 +67,7 @@ class op_ConstString(OpCode):
 
 class op_Move(OpCode):
     def __init__(self):
-        OpCode.__init__(self, '^move(-object)? (.+),\s*(.+)')
+        OpCode.__init__(self, '^move(-object)?[\/from16]* (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, vy):

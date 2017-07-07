@@ -76,18 +76,18 @@ emu2 = Emulator()
 # ret = emu2.call(snippet)
 # print("'%s'" % ret)
 
-snippet = [
-    'const/4 v4, 0x0',
-    'new-instance v4, Ljava/lang/StringBuilder;',
-    'const-string v5, "test_value_of"',
-    'invoke-static {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
-    'move-result-object v5',
-    'invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
-    'return-object v4'
-]
-ret = emu2.call(snippet)
-print("Result : %s\n" % ret)
-
+# snippet = [
+#     'const/4 v4, 0x0',
+#     'new-instance v4, Ljava/lang/StringBuilder;',
+#     'const-string v5, "test_value_of"',
+#     'invoke-static {v5}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+#     'move-result-object v5',
+#     'invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+#     'return-object v4'
+# ]
+# ret = emu2.call(snippet)
+# print("Result : %s\n" % ret)
+#
 snippet = [
     # 'const/4 v4, 0x0',
     'new-instance v4, Ljava/lang/StringBuilder;',
@@ -136,3 +136,61 @@ print("Result : %s" % ret)
 #
 # ret = emu2.call(snippet)
 # print("'%s'" % ret)
+
+# support move-object/from16
+snippet = [
+    'new-instance v13, Ljava/lang/StringBuilder;',
+    'invoke-direct {v13}, Ljava/lang/StringBuilder;-><init>()V',
+    'const-string v16, "h"',
+    'move-object/from16 v0, v16',
+    'invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+    'return-object v13'
+    ]
+
+ret = emu2.call(snippet)
+for excep in emu2.vm.exceptions:
+    print(excep)
+print("'%s'" % ret)
+    #
+    #
+    # const-string v16, "-"
+    #
+    # move-object/from16 v0, v16
+    #
+    # invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    #
+    # move-result-object v13
+    #
+    # const-string v16, "="
+    #
+    # move-object/from16 v0, v16
+    #
+    # invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    #
+    # move-result-object v13
+    #
+    # const-string v16, "7"
+    #
+    # move-object/from16 v0, v16
+    #
+    # invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    #
+    # move-result-object v13
+    #
+    # const-string v16, "0"
+    #
+    # move-object/from16 v0, v16
+    #
+    # invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    #
+    # move-result-object v13
+    #
+    # const-string v16, "8"
+    #
+    # move-object/from16 v0, v16
+    #
+    # invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    #
+    # move-result-object v13
+    #
+    # invoke-virtual {v13}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
