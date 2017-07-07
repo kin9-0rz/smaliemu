@@ -48,7 +48,7 @@ class ObjectMapping(object):
         :param klass: Mangled class name to instanciate.
         :return: The new class instance.
         """
-        class_name = self.__demangle_class_name( vm, klass )
+        class_name = self.__demangle_class_name(vm, klass)
 
         if class_name in self.mapping:
             if 'new-instance' in self.mapping[class_name]:

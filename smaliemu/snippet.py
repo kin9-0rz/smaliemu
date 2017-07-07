@@ -21,9 +21,9 @@
 # Class to hold the source file data.
 class Snippet(object):
     def __init__(self, snippet):
-        self.lines    = snippet
+        self.lines = snippet
 
-    def has_line(self,index):
+    def has_line(self, index):
         return True if 0 <= index < len(self.lines) else False
 
     def __getitem__(self, index):

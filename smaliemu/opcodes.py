@@ -18,7 +18,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 import re
 
-# Base class for all Dalvik opcodes ( see http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html ).
+# Base class for all Dalvik opcodes (see http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html).
 class OpCode(object):
     trace = False
 
@@ -40,12 +40,13 @@ class OpCode(object):
             return False
 
         if OpCode.trace is True:
-            print("%03d %s" % ( vm.pc, line ))
+            print("%03d %s" % (vm.pc, line))
 
         try:
             self.eval(vm, *[x.strip() if x is not None else x for x in m.groups()])
         except Exception as e:
             vm.exception(e)
+            raise e
 
         return True
 
@@ -229,7 +230,7 @@ class op_AddIntLit(OpCode):
 
     @staticmethod
     def eval(vm, vx, vy, lit):
-        vm[vx] = eval( "%s + %s" % ( vm[vy], lit ) )
+        vm[vx] = eval("%s + %s" % (vm[vy], lit))
 
 class op_MulIntLit(OpCode):
     def __init__(self):
@@ -366,11 +367,10 @@ class op_IntToType(OpCode):
     @staticmethod
     def eval(vm, ctype, vx, vy):
         if ctype == 'char':
-            vm[vx] = chr( vm[vy] & 0xFF )
+            vm[vx] = chr(vm[vy] & 0xFF)
 
         else:
-            # vm.emu.fatal( "Unsupported type '%s'." % ctype )
-            raise RuntimeError( "Unsupported type '%s'." % ctype )
+            raise RuntimeError("Unsupported type '%s'." % ctype)
 
 class op_SPut(OpCode):
     def __init__(self):
@@ -401,13 +401,12 @@ class op_Return(OpCode):
         if (ctype is None and vx is None) or ctype == '-void':
             vm.return_v = None
             vm.stop = True
-        elif ctype in ( '-wide', '-object' ) or (ctype is None and vx is not None):
+        elif ctype in ('-wide', '-object') or (ctype is None and vx is not None):
             vm.return_v = vm[vx]
             vm.stop = True
 
         else:
-            # vm.emu.fatal( "Unsupported return type." )
-            raise RuntimeError( "Unsupported return type." )
+            raise RuntimeError("Unsupported return type.")
 
 class op_RemIntLit(OpCode):
     def __init__(self):

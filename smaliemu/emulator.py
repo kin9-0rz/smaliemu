@@ -62,9 +62,9 @@ class Emulator(object):
 
         # Dynamically load opcode handlers.
         # TODO: Implement missing opcodes.
-        for entry in dir( sys.modules['smaliemu.opcodes'] ):
+        for entry in dir(sys.modules['smaliemu.opcodes']):
             if entry.startswith('op_'):
-                self.opcodes.append( globals()[entry]() )
+                self.opcodes.append(globals()[entry]())
 
     def __preprocess(self, smali_code):
         """
@@ -72,7 +72,7 @@ class Emulator(object):
         for fast lookups while jumping and will pre parse all the try/catch directives.
         """
         next_line = None
-        smali_code.lines = list(map( str.strip, smali_code.lines ))
+        smali_code.lines = list(map(str.strip, smali_code.lines))
         for index, line in enumerate(smali_code.lines):
             # we're inside a block which was already processed
             if next_line is not None and index <= next_line:
@@ -89,7 +89,7 @@ class Emulator(object):
                 processed = False
                 for preproc in self.preprocessors:
                     if preproc.check(line):
-                        next_line = preproc.process( self.vm, line, index, smali_code.lines )
+                        next_line = preproc.process(self.vm, line, index, smali_code.lines)
                         processed = True
 
                 # no preprocessor found, this is a normal label

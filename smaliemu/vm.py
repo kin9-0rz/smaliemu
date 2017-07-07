@@ -28,7 +28,7 @@ class VM(object):
         self.mapping = ObjectMapping()
         # map of jump labels to opcodes offsets
         self.labels = {}
-        # variables container
+        # variables container / registers, etc. v1:"str1"
         self.variables = {}
         # try/catch blocks container with opcodes offsets
         self.catch_blocks = []
@@ -78,4 +78,4 @@ class VM(object):
         return self.mapping.new_instance(self, klass)
 
     def invoke(self, this, class_name, method_name, args):
-        self.mapping.invoke( self, this, class_name, method_name, args )
+        self.mapping.invoke(self, this, class_name, method_name, args)

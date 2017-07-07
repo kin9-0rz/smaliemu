@@ -26,7 +26,7 @@ class TryCatchPreprocessor:
         return line.startswith( ':try_start_' )
 
     @staticmethod
-    def process(vm, line, index, lines ):
+    def process(vm, line, index, lines):
         """
         Will search the '.catch' directive and update the VM accordingly.
         """
@@ -50,7 +50,7 @@ class TryCatchPreprocessor:
 class PackedSwitchPreprocessor:
     @staticmethod
     def check(line):
-        return line.startswith( ':pswitch_data' )
+        return line.startswith(':pswitch_data')
 
     @staticmethod
     def process(vm, name, index, lines):
@@ -81,7 +81,7 @@ class PackedSwitchPreprocessor:
 class ArrayDataPreprocessor:
     @staticmethod
     def check(line):
-        return line.startswith( ':array_' )
+        return line.startswith(':array_')
 
     @staticmethod
     def process(vm, name, index, lines):
