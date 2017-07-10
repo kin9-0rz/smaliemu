@@ -1,6 +1,6 @@
 # {'a': IndexError('string index out of range':), 'i': 100, 'ret': None, 's': 'hello'}
 const-string s, "hello"
-const/12 i, 5
+const/12 i, 100
 
 :try_start_0
 

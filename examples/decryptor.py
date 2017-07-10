@@ -147,7 +147,7 @@ snippet = [
     'return-object v13'
     ]
 
-ret = emu2.call(snippet)
+ret = emu2.call(snippet, thrown=True)
 for excep in emu2.vm.exceptions:
     print(excep)
 print("'%s'" % ret)
@@ -226,7 +226,7 @@ snippet = ['',
 '    aput-byte v6, v0, v1', '    const/16 v1, 0xd', '    aput-byte v1, v0, v3', '    const/16 v1, 0x12',
 '    const/16 v2, 0x17', '    aput-byte v2, v0, v1', 'return-object v0']
 
-ret = emu2.call(snippet)
+ret = emu2.call(snippet, thrown=True)
 for excep in emu2.vm.exceptions:
     print(excep)
 print("'%s'" % ret)
