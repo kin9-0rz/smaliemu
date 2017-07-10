@@ -58,6 +58,7 @@ class String:
     def charat(vm, this, args):
         idx = vm[args[0]]
         obj = vm[this]
+        print(idx, obj)
         vm.return_v = obj[idx]
 
     @staticmethod

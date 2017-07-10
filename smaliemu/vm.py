@@ -46,6 +46,8 @@ class VM(object):
         self.stop = False
         # current opcode index
         self.pc = 0
+        # if True, when OpCode eval an unsupported opcode/line, vm will stop.
+        self.thrown = False
 
     def __getitem__(self, name):
         return self.variables[name]

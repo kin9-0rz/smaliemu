@@ -174,7 +174,7 @@ class Emulator(object):
         return self.vm.return_v
 
 
-    def call(self, snippet, trace=False):
+    def call(self, snippet, trace=False, thrown=True):
         """
         Load a smali file and start emulating it.
         :param filename: The path of the file to load and emulate.
@@ -187,6 +187,7 @@ class Emulator(object):
         self.vm     = VM(self)
         self.stats  = Stats(self)
         self.vm.return_v = None
+        self.vm.thrown = thrown
 
         self.vm.variables.copy()
 

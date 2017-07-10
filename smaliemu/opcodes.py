@@ -46,7 +46,8 @@ class OpCode(object):
             self.eval(vm, *[x.strip() if x is not None else x for x in m.groups()])
         except Exception as e:
             vm.exception(e)
-            raise e
+            if not vm.thrown:
+                raise e
 
         return True
 
