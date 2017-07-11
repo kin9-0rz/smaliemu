@@ -207,9 +207,8 @@ class Emulator(object):
             if self.__should_skip_line(line):
                 continue
 
-            elif self.__parse_line(line) is False:
+            elif self.__parse_line(line) is False and thrown:
                 # 只要有一条指令出错都应该停止执行
-                from smaliemu.exception import UnsupportedOpcodeError
                 raise UnsupportedOpcodeError(self.get_error_line())
 
         e = time.time() * 1000

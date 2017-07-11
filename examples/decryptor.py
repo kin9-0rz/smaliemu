@@ -230,3 +230,16 @@ ret = emu2.call(snippet, thrown=True)
 for excep in emu2.vm.exceptions:
     print(excep)
 print("'%s'" % ret)
+
+snippet = [
+    'const/16 v0, 0x13',
+    'new-array v0, v0, [B',
+    'sput-object v0, Lcom/a/e/b;->K:[B',
+    'const/16 v0, 0xa',
+    'return-object v0'
+]
+
+ret = emu2.call(snippet, trace=True, thrown=True)
+for excep in emu2.vm.exceptions:
+    print(excep)
+print("'%s'" % ret)
