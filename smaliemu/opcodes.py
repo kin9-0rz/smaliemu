@@ -27,7 +27,8 @@ class OpCode(object):
 
     @staticmethod
     def get_int_value(val):
-        if val.startswith('0x') and val.endswith('t'):
+        ptn = re.compile(r'-?0x\w+?t')
+        if ptn.match(val):
             return int(val[:-1], 16)
         elif "0x" in val:
             return int(val, 16)

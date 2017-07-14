@@ -56,25 +56,30 @@ emu2 = Emulator()
 # ret = emu2.call(snippet)
 # print("'%s'" % ret)
 
-#
-# snippet = [
-#     'const/4 v4, 0x1',
-#     'const/4 v3, 0x0',
-#     'new-instance v0, Ljava/lang/String;',
-#     'const/4 v1, 0x2',
-#     'new-array v1, v1, [B',
-#     'fill-array-data v1, :array_5a',
-#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
-#     'return-object v0',
-#     ':array_5a',
-#     '.array-data 1',
-#         '0x44t',
-#         '0x45t',
-#     '.end array-data'
-#
-# ]
-# ret = emu2.call(snippet)
-# print("'%s'" % ret)
+
+snippet = [
+    'const/4 v4, 0x1',
+    'const/4 v3, 0x0',
+    'new-instance v0, Ljava/lang/String;',
+    'const/4 v1, 0x2',
+    'new-array v1, v1, [B',
+    'fill-array-data v1, :array_5a',
+    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
+    'return-object v0',
+    ':array_5a',
+    '.array-data 1',
+        '0x44t',
+        '0x45t',
+    '.end array-data',
+    ':array_5b',
+    '.array-data 1',
+        '-0x44t',
+        '-0x45t',
+    '.end array-data'
+
+]
+ret = emu2.call(snippet)
+print("'%s'" % ret)
 
 # snippet = [
 #     'const/4 v4, 0x0',
