@@ -1,11 +1,10 @@
-﻿from setuptools import setup
 
+from setuptools import setup
 
 if __name__ == "__main__":
-
     setup(
         name="smaliemu",
-        version="0.0.8",
+        version="0.1.0",
         description=("smaliemu"),
 
         packages=[
