@@ -60,6 +60,14 @@ class op_Const(OpCode):
     def eval(vm, _, vx, lit):
         vm[vx] = OpCode.get_int_value(lit)
 
+class op_ConstWide(OpCode):
+    def __init__(self):
+        OpCode.__init__(self, '^const-wide(/\d+)? (.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, _, vx, lit):
+        vm[vx] = OpCode.get_int_value(lit)
+
 class op_ConstString(OpCode):
     def __init__(self):
         OpCode.__init__(self, '^const-string(?:/jumbo)? (.+),\s*"(.*)"')

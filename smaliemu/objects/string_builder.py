@@ -18,7 +18,9 @@
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+
 class StringBuilder:
+
     @staticmethod
     def name():
         return 'java.lang.StringBuilder'
@@ -42,6 +44,7 @@ class StringBuilder:
     def init(vm, this, args):
         pass
 
+    @staticmethod
     def init_from_string(vm, this, args):
         vm.return_v = vm[args[0]]
         vm[this] = vm[args[0]]
@@ -53,4 +56,4 @@ class StringBuilder:
 
     @staticmethod
     def tostring(vm, this, args):
-        vm.return_v = str(vm[this])
+        vm.return_v = vm[this]

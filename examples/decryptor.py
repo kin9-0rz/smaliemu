@@ -17,14 +17,15 @@
 # program. If not, go to http://www.gnu.org/licenses/gpl.html
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-import sys, os
+import sys
+import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from smaliemu.emulator import Emulator
 
 emu = Emulator()
 
-filename = os.path.join( os.path.dirname(__file__), 'decryptor.smali' )
+filename = os.path.join(os.path.dirname(__file__), 'decryptor.smali')
 
 # Arguments for the method.
 args = {
@@ -68,13 +69,13 @@ snippet = [
     'return-object v0',
     ':array_5a',
     '.array-data 1',
-        '0x44t',
-        '0x45t',
+    '0x44t',
+    '0x45t',
     '.end array-data',
     ':array_5b',
     '.array-data 1',
-        '-0x44t',
-        '-0x45t',
+    '-0x44t',
+    '-0x45t',
     '.end array-data'
 
 ]
@@ -150,7 +151,7 @@ snippet = [
     'move-object/from16 v0, v16',
     'invoke-virtual {v13, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
     'return-object v13'
-    ]
+]
 
 ret = emu2.call(snippet, thrown=True)
 for excep in emu2.vm.exceptions:
@@ -213,23 +214,23 @@ print("'%s'" % ret)
 # ]
 
 snippet = ['',
-'    .registers 8', '    const/4 v7, 0x2',
-'    const/16 v6, 0xc',
-'    const/4 v5, 0x7', '    const/4 v4, 0x1', '    const/16 v3, 0x11',
-'    const/16 v0, 0x13',
-'    new-array v0, v0, [B', '    const/4 v1, 0x0', '    const/16 v2, 0x36',
-'    aput-byte v2, v0, v1',
-'    aput-byte v6, v0, v4', '    aput-byte v4, v0, v7', '    const/4 v1, 0x3', '    const/16 v2, 0x1a',
-'    aput-byte v2, v0, v1', '    const/4 v1, 0x4', '    aput-byte v3, v0, v1', '    const/4 v1, 0x5',
-'    const/16 v2, 0xb', '    aput-byte v2, v0, v1', '    const/4 v1, 0x6', '    const/16 v2, 0x1a',
-'    aput-byte v2, v0, v1', '    const/16 v1, 0x4e', '    aput-byte v1, v0, v5', '    const/16 v1, 0x8',
-'    const/16 v2, 0x15', '    aput-byte v2, v0, v1', '    const/16 v1, 0xa', '    const/16 v2, 0x5c',
-'    aput-byte v2, v0, v1', '    const/16 v1, 0xb', '    const/16 v2, 0x1e', '    aput-byte v2, v0, v1',
-'    const/16 v1, 0x1e', '    aput-byte v1, v0, v6', '    const/16 v1, 0xd', '    const/16 v2, 0x5c',
-'    aput-byte v2, v0, v1', '    const/16 v1, 0xe', '    const/16 v2, 0x46', '    aput-byte v2, v0, v1',
-'    const/16 v1, 0xf', '    aput-byte v5, v0, v1', '    const/16 v1, 0x10',
-'    aput-byte v6, v0, v1', '    const/16 v1, 0xd', '    aput-byte v1, v0, v3', '    const/16 v1, 0x12',
-'    const/16 v2, 0x17', '    aput-byte v2, v0, v1', 'return-object v0']
+           '    .registers 8', '    const/4 v7, 0x2',
+           '    const/16 v6, 0xc',
+           '    const/4 v5, 0x7', '    const/4 v4, 0x1', '    const/16 v3, 0x11',
+           '    const/16 v0, 0x13',
+           '    new-array v0, v0, [B', '    const/4 v1, 0x0', '    const/16 v2, 0x36',
+           '    aput-byte v2, v0, v1',
+           '    aput-byte v6, v0, v4', '    aput-byte v4, v0, v7', '    const/4 v1, 0x3', '    const/16 v2, 0x1a',
+           '    aput-byte v2, v0, v1', '    const/4 v1, 0x4', '    aput-byte v3, v0, v1', '    const/4 v1, 0x5',
+           '    const/16 v2, 0xb', '    aput-byte v2, v0, v1', '    const/4 v1, 0x6', '    const/16 v2, 0x1a',
+           '    aput-byte v2, v0, v1', '    const/16 v1, 0x4e', '    aput-byte v1, v0, v5', '    const/16 v1, 0x8',
+           '    const/16 v2, 0x15', '    aput-byte v2, v0, v1', '    const/16 v1, 0xa', '    const/16 v2, 0x5c',
+           '    aput-byte v2, v0, v1', '    const/16 v1, 0xb', '    const/16 v2, 0x1e', '    aput-byte v2, v0, v1',
+           '    const/16 v1, 0x1e', '    aput-byte v1, v0, v6', '    const/16 v1, 0xd', '    const/16 v2, 0x5c',
+           '    aput-byte v2, v0, v1', '    const/16 v1, 0xe', '    const/16 v2, 0x46', '    aput-byte v2, v0, v1',
+           '    const/16 v1, 0xf', '    aput-byte v5, v0, v1', '    const/16 v1, 0x10',
+           '    aput-byte v6, v0, v1', '    const/16 v1, 0xd', '    aput-byte v1, v0, v3', '    const/16 v1, 0x12',
+           '    const/16 v2, 0x17', '    aput-byte v2, v0, v1', 'return-object v0']
 
 ret = emu2.call(snippet, thrown=True)
 for excep in emu2.vm.exceptions:
@@ -248,3 +249,25 @@ ret = emu2.call(snippet, trace=True, thrown=True)
 for excep in emu2.vm.exceptions:
     print(excep)
 print("'%s'" % ret)
+
+
+# snippet = [
+#     'const-wide/high16 v0, 0x3ff0000000000000L    # 1.0',
+#     'return-object v0'
+# ]
+
+# ret = emu2.call(snippet, trace=True)
+# print("'%s'" % ret)
+
+snippet = ['move-result-object v0',
+           'invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;',
+           'move-result-object v2',
+           'new-instance v0, Ljava/lang/StringBuilder;',
+           'invoke-static {v2}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+           'return-object v2']
+print('*' * 10)
+ret = emu2.call(snippet)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
