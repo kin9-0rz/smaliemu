@@ -18,7 +18,10 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 import re
 
-# Base class for all Dalvik opcodes (see http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html).
+# Base class for all Dalvik opcodes (see
+# http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html).
+
+
 class OpCode(object):
     trace = False
 
@@ -32,8 +35,8 @@ class OpCode(object):
             return int(val[:-1], 16)
         elif "0x" in val:
             return int(val, 16)
-        else:
-            return int(val)
+
+        return int(val)
 
     def parse(self, line, vm):
         m = self.expression.search(line)
@@ -42,9 +45,12 @@ class OpCode(object):
 
         if OpCode.trace is True:
             print("%03d %s" % (vm.pc, line))
+            print('Registers : ', vm.variables)
+            print('Return    : ', vm.return_v)
 
         try:
-            self.eval(vm, *[x.strip() if x is not None else x for x in m.groups()])
+            self.eval(
+                vm, *[x.strip() if x is not None else x for x in m.groups()])
         except Exception as e:
             vm.exception(e)
             if vm.thrown:
@@ -52,207 +58,258 @@ class OpCode(object):
 
         return True
 
+
 class op_Const(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^const(/\d+)? (.+),\s*(.+)')
+        OpCode.__init__(self, r'^const(/\d+)? (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, lit):
         vm[vx] = OpCode.get_int_value(lit)
+        vm.return_v = vm[vx]
+
 
 class op_ConstWide(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^const-wide(/\d+)? (.+),\s*(.+)')
+        OpCode.__init__(self, r'^const-wide(/\d+)? (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, lit):
         vm[vx] = OpCode.get_int_value(lit)
+        vm.return_v = vm[vx]
+
 
 class op_ConstString(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^const-string(?:/jumbo)? (.+),\s*"(.*)"')
+        OpCode.__init__(self, r'^const-string(?:/jumbo)? (.+),\s*"(.*)"')
 
     @staticmethod
     def eval(vm, vx, s):
         vm[vx] = s
+        vm.return_v = vm[vx]
+
 
 class op_Move(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^move(-object)?[\/from16]* (.+),\s*(.+)')
+        OpCode.__init__(self, r'^move(-object)?[\/from16]* (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, vy):
         vm[vx] = vm[vy]
 
+
 class op_MoveResult(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^move-result(-object)? (.+)')
+        OpCode.__init__(self, r'^move-result(-object)? (.+)')
 
     @staticmethod
     def eval(vm, _, dest):
         vm[dest] = vm.return_v
 
+
 class op_MoveException(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^move-exception (.+)')
+        OpCode.__init__(self, r'^move-exception (.+)')
 
     @staticmethod
     def eval(vm, vx):
         vm[vx] = vm.exceptions.pop()
 
+
 class op_IfLe(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-le (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-le (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] <= vm[vy]:
             vm.goto(label)
 
+
 class op_IfGe(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-ge (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-ge (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] >= vm[vy]:
             vm.goto(label)
 
+
 class op_IfGez(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-gez (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-gez (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] >= 0:
             vm.goto(label)
 
+
 class op_IfLtz(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-ltz (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-ltz (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] < 0:
             vm.goto(label)
 
+
 class op_IfGt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-gt (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-gt (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] > vm[vy]:
             vm.goto(label)
 
+
 class op_IfGtz(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-gtz (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-gtz (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] > 0:
             vm.goto(label)
 
+
 class op_IfLez(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-lez (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-lez (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] <= 0:
             vm.goto(label)
 
+
 class op_IfEq(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-eq (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-eq (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] == vm[vy]:
             vm.goto(label)
 
+
 class op_IfNe(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-ne (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-ne (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] != vm[vy]:
             vm.goto(label)
 
+
 class op_IfLt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-lt (.+),\s*(.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-lt (.+),\s*(.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, vy, label):
         if vm[vx] < vm[vy]:
             vm.goto(label)
 
+
 class op_IfEqz(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-eqz (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-eqz (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] == 0:
             vm.goto(label)
 
+
 class op_IfNez(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^if-nez (.+),\s*(\:.+)')
+        OpCode.__init__(self, r'^if-nez (.+),\s*(\:.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         if vm[vx] != 0:
             vm.goto(label)
 
+
 class op_ArrayLength(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, 'array-length (.+),\s*(.+)')
+        OpCode.__init__(self, r'array-length (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy):
         vm[vx] = len(vm[vy])
 
+
 class op_ArrayFillData(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, 'fill-array-data (.+),\s*(.+)')
+        OpCode.__init__(self, r'fill-array-data (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, label):
         vm[vx] = vm.array_data[label]["elements"]
 
+
 class op_Aget(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^aget[\-a-z]* (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^aget[\-a-z]* (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
-        arr     = vm[vy]
-        idx     = vm[vz]
+        arr = vm[vy]
+        idx = vm[vz]
         vm[vx] = arr[idx]
 
+
 class op_AddIntLit(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^add-int/lit\d+ (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^add-int/lit\d+ (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, lit):
         vm[vx] = eval("%s + %s" % (vm[vy], lit))
 
+
 class op_MulIntLit(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^mul-int/lit\d+ (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^mul-int/lit\d+ (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, lit):
         vm[vx] = eval("%s * %s" % (vm[vy], lit))
 
+
 class op_XorInt2Addr(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^xor-int(/2addr)? (.+),\s*(.+)')
+        OpCode.__init__(self, r'^xor-int(/2addr)? (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, vy):
@@ -262,89 +319,111 @@ class op_XorInt2Addr(OpCode):
         else:
             vm[vx] ^= ord(vm[vy])
 
+
 class op_DivInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^div-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^div-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] / vm[vz]
 
+
 class op_AddInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^add-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^add-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] + vm[vz]
 
+
 class op_SubInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^sub-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^sub-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] - vm[vz]
 
+
 class op_MulInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^mul-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^mul-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] * vm[vz]
 
+
 class op_RemInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^rem-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^rem-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] % vm[vz]
 
+
 class op_AndInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^and-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^and-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] & vm[vz]
 
+
 class op_OrInt(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^or-int (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^or-int (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] | vm[vz]
 
+
 class op_GoTo(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^goto(/\d+)? (:.+)')
+        OpCode.__init__(self, r'^goto(/\d+)? (:.+)')
 
     @staticmethod
     def eval(vm, _, label):
         vm.goto(label)
 
+
 class op_NewInstance(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^new-instance (.+),\s*(.+)')
+        OpCode.__init__(self, r'^new-instance (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, klass):
         vm[vx] = vm.new_instance(klass)
 
+
 class op_NewArray(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^new-array (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^new-array (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, klass):
         vm[vx] = [""] * vm[vy]
 
+
 class op_APut(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^aput(-[a-z]+)? (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^aput(-[a-z]+)? (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, vy, vz):
@@ -357,22 +436,26 @@ class op_APut(OpCode):
             arr.append(val)
         vm[vy] = arr
 
+
 class op_Invoke(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^invoke-([a-z]+) \{(.*)\},\s*(.+)')
+        OpCode.__init__(self, r'^invoke-([a-z]+) \{(.*)\},\s*(.+)')
 
     @staticmethod
     def eval(vm, _, args, call):
         args = list(map(str.strip, args.split(',')))
         this = args[0]
         args = args[1:]
-        klass, method  = call.split(';->')
+        klass, method = call.split(';->')
 
         vm.invoke(this, klass, method, args)
 
+
 class op_IntToType(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^int-to-([a-z]+) (.+),\s*(.+)')
+        OpCode.__init__(self, r'^int-to-([a-z]+) (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, ctype, vx, vy):
@@ -382,29 +465,35 @@ class op_IntToType(OpCode):
         else:
             raise RuntimeError("Unsupported type '%s'." % ctype)
 
+
 class op_SPut(OpCode):
+
     def __init__(self):
-        #sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
-        #aput-object v6, v8, v7
-        OpCode.__init__(self, '^sput-object+\s(.+),\s*(.+)')
+        # sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
+        # aput-object v6, v8, v7
+        OpCode.__init__(self, r'^sput-object+\s(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, staticVariableName):
         vm.variables[staticVariableName] = vm.variables[vx]
 
+
 class op_SGet(OpCode):
+
     def __init__(self):
-        #sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
-        #aput-object v6, v8, v7
-        OpCode.__init__(self, '^sget-object+\s(.+),\s*(.+)')
+        # sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
+        # aput-object v6, v8, v7
+        OpCode.__init__(self, r'^sget-object+\s(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, staticVariableName):
         vm.variables[vx] = vm.variables[staticVariableName]
 
+
 class op_Return(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^return(-[a-z]*)*\s*(.+)*')
+        OpCode.__init__(self, r'^return(-[a-z]*)*\s*(.+)*')
 
     @staticmethod
     def eval(vm, ctype, vx):
@@ -418,17 +507,21 @@ class op_Return(OpCode):
         else:
             raise RuntimeError("Unsupported return type.")
 
+
 class op_RemIntLit(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^rem-int/lit\d+ (.+),\s*(.+),\s*(.+)')
+        OpCode.__init__(self, r'^rem-int/lit\d+ (.+),\s*(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, vy, lit):
         vm[vx] = int(vm[vy]) % OpCode.get_int_value(lit)
 
+
 class op_PackedSwitch(OpCode):
+
     def __init__(self):
-        OpCode.__init__(self, '^packed-switch (.+),\s*(.+)')
+        OpCode.__init__(self, r'^packed-switch (.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, vx, table):

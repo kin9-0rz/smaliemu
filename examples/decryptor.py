@@ -265,8 +265,27 @@ snippet = ['move-result-object v0',
            'new-instance v0, Ljava/lang/StringBuilder;',
            'invoke-static {v2}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
            'return-object v2']
-print('*' * 10)
 ret = emu2.call(snippet)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+print('-' * 100)
+
+
+snippet = ['new-instance v2, Ljava/lang/StringBuilder;',
+           '    const-string v3, "http://gp.miaoxia123.com"',
+           '    move-result-object v3',
+           '    invoke-direct {v2, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+           '    const-string v3, "/cr/sdk/goplaysdk_statistics_method.dat"',
+           '    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+           '    move-result-object v2',
+           '    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;',
+           'return-object v2']
+
+ret = emu2.call(snippet, trace=True)
+print(type(ret))
 if ret:
     print(">>> '%s'" % ret)
 else:
