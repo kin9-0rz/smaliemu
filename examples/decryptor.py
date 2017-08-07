@@ -273,19 +273,63 @@ else:
 
 print('-' * 100)
 
-
-snippet = ['new-instance v2, Ljava/lang/StringBuilder;',
-           '    const-string v3, "http://gp.miaoxia123.com"',
-           '    move-result-object v3',
-           '    invoke-direct {v2, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
-           '    const-string v3, "/cr/sdk/goplaysdk_statistics_method.dat"',
-           '    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
-           '    move-result-object v2',
-           '    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;',
-           'return-object v2']
+# Test StringBuidler
+snippet = [
+    'new-instance v2, Ljava/lang/StringBuilder;',
+    'const-string v3, "http://gp.miaoxia123.com"',
+    'move-result-object v3',
+    'invoke-direct {v2, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V',
+    'const-string v3, "/cr/sdk/goplaysdk_statistics_method.dat"',
+    'invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+    'move-result-object v2',
+    'invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;',
+    'return-object v2'
+]
 
 ret = emu2.call(snippet, trace=True)
 print(type(ret))
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+
+print('\n\nTesting StringBuffer ... ')
+snippet = [
+    'const-string v2, " ???"',
+    'new-instance v0, Ljava/lang/StringBuffer;',
+    'const-string v3, "a"',
+    'invoke-direct {v0, v3}, Ljava/lang/StringBuffer;-><init>(Ljava/lang/String;)V',
+    'const-string v3, "m starts"',
+    'invoke-virtual {v0, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;',
+    'move-result-object v0',
+    'const-string v3, "ervice -a "',
+    'invoke-virtual {v0, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;',
+    'move-result-object v0',
+    'invoke-virtual {v0, v2}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;',
+    'move-result-object v0',
+    'const-string v3, ".self"',
+    'invoke-virtual {v0, v3}, Ljava/lang/StringBuffer;->append(Ljava/lang/String;)Ljava/lang/StringBuffer;',
+    'move-result-object v0', '    invoke-virtual {v0}, Ljava/lang/StringBuffer;->toString()Ljava/lang/String;',
+    'return-object v0'
+]
+
+ret = emu2.call(snippet, trace=True)
+print(type(ret))
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+print('\n\nTesting StringBuffer ... ')
+snippet = [
+    'const-string v1, "com.install.service.store"',
+    'const/4 v2, 0x0',
+    'const/16 v3, 0x10',
+    'invoke-virtual {v1, v2, v3}, Ljava/lang/String;->substring(II)Ljava/lang/String;'
+]
+
+ret = emu2.call(snippet, trace=True)
 if ret:
     print(">>> '%s'" % ret)
 else:

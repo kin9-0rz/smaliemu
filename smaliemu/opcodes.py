@@ -43,11 +43,6 @@ class OpCode(object):
         if m is None:
             return False
 
-        if OpCode.trace is True:
-            print("%03d %s" % (vm.pc, line))
-            print('Registers : ', vm.variables)
-            print('Return    : ', vm.return_v)
-
         try:
             self.eval(
                 vm, *[x.strip() if x is not None else x for x in m.groups()])
@@ -55,6 +50,11 @@ class OpCode(object):
             vm.exception(e)
             if vm.thrown:
                 raise e
+
+        if OpCode.trace is True:
+            print("%03d %s" % (vm.pc, line))
+            print('Registers : ', vm.variables)
+            print('Return    : ', vm.return_v)
 
         return True
 

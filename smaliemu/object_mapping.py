@@ -19,13 +19,19 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 from smaliemu.objects.string import String
 from smaliemu.objects.string_builder import StringBuilder
+from smaliemu.objects.string_buffer import StringBuffer
 
-# This class holds the mapping of Java objects and methods to their Python respective.
+# This class holds the mapping of Java objects and methods to their Python
+# respective.
+
+
 class ObjectMapping(object):
+
     def __init__(self):
         self.mapping = {
             String.name(): String.methods(),
-            StringBuilder.name(): StringBuilder.methods()
+            StringBuilder.name(): StringBuilder.methods(),
+            StringBuffer.name(): StringBuffer.methods()
         }
 
     @staticmethod
@@ -55,7 +61,8 @@ class ObjectMapping(object):
                 return self.mapping[class_name]['new-instance']()
 
             else:
-                raise RuntimeError("Unsupported method 'new-instance' for class '%s'." % class_name)
+                raise RuntimeError(
+                    "Unsupported method 'new-instance' for class '%s'." % class_name)
                 # vm.emu.fatal("Unsupported method 'new-instance' for class '%s'." % class_name)
         else:
             raise RuntimeError("Unsupported class '%s'." % class_name)
@@ -70,16 +77,18 @@ class ObjectMapping(object):
         :param method_name: Mangled method name to invoke.
         :param args: Arguments of the method.
         """
-        class_name = self.__demangle_class_name( vm, klass )
+        class_name = self.__demangle_class_name(vm, klass)
         if class_name in self.mapping:
             if method_name in self.mapping[class_name]:
-                invokeResult = self.mapping[class_name][method_name](vm, this, args)
+                invokeResult = self.mapping[class_name][
+                    method_name](vm, this, args)
                 if not invokeResult is None:
                     vm.return_v = invokeResult
 
             else:
                 # vm.emu.fatal("Unsupported method '%s' for class '%s'." % ( method_name, class_name ))
-                raise RuntimeError("Unsupported method '%s' for class '%s'." % ( method_name, class_name ))
+                raise RuntimeError(
+                    "Unsupported method '%s' for class '%s'." % (method_name, class_name))
         else:
             # vm.emu.fatal("Unsupported class '%s'." % class_name)
             raise RuntimeError("Unsupported class '%s'." % class_name)

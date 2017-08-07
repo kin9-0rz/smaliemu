@@ -17,6 +17,9 @@
 # program. If not, go to http://www.gnu.org/licenses/gpl.html
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+import sys
+import time
+
 from smaliemu.opcodes import *
 from smaliemu.vm import VM
 from smaliemu.source import Source
@@ -25,9 +28,6 @@ from smaliemu.preprocessors import TryCatchPreprocessor
 from smaliemu.preprocessors import PackedSwitchPreprocessor
 from smaliemu.preprocessors import ArrayDataPreprocessor
 from smaliemu.exception import UnsupportedOpcodeError
-
-import sys
-import time
 
 
 # Holds some statistics.

@@ -18,7 +18,9 @@
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+
 class String:
+
     @staticmethod
     def name():
         return 'java.lang.String'
@@ -32,7 +34,8 @@ class String:
             'charAt(I)C': String.charat,
             'toCharArray()[C': String.tochararray,
             'intern()Ljava/lang/String;': String.repr_intern,
-            'valueOf(Ljava/lang/Object;)Ljava/lang/String;': String.valueof
+            'valueOf(Ljava/lang/Object;)Ljava/lang/String;': String.valueof,
+            'substring(II)Ljava/lang/String;': String.substring
         }
 
     @staticmethod
@@ -67,3 +70,10 @@ class String:
     @staticmethod
     def valueof(vm, this, args):
         vm.return_v = vm[this]
+
+    @staticmethod
+    def substring(vm, this, args):
+        start = vm[args[0]]
+        end = vm[args[1]]
+        vm.return_v = vm[this][start:end]
+        vm[this] = vm.return_v
