@@ -40,7 +40,8 @@ args = {
 
 emu2 = Emulator()
 #
-# snippet = ['const/4 v1, 0x0', 'const-string v2, "z"', 'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
+# snippet = ['const/4 v1, 0x0', 'const-string v2, "z"',
+#            'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
 # ret = emu2.call(snippet)
 # print("'%s'" % ret)
 #
@@ -327,6 +328,18 @@ snippet = [
     'const/4 v2, 0x0',
     'const/16 v3, 0x10',
     'invoke-virtual {v1, v2, v3}, Ljava/lang/String;->substring(II)Ljava/lang/String;'
+]
+
+ret = emu2.call(snippet, trace=True)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+
+print('\n\nTesting String startswith space ... ')
+snippet = [
+    'const-string v1, "  com.install.service. store "',
 ]
 
 ret = emu2.call(snippet, trace=True)
