@@ -12,6 +12,7 @@ class StringBuffer:
             '<init>(Ljava/lang/String;)V': StringBuffer.init_from_string,
             'append(Ljava/lang/String;)Ljava/lang/StringBuffer;': StringBuffer.append,
             'append(C)Ljava/lang/StringBuffer;': StringBuffer.append,
+            'insert(ILjava/lang/String;)Ljava/lang/StringBuffer;': StringBuffer.insert,
             'toString()Ljava/lang/String;': StringBuffer.tostring
         }
 
@@ -31,6 +32,14 @@ class StringBuffer:
     @staticmethod
     def append(vm, this, args):
         vm[this] += vm[args[0]]
+        vm.return_v = vm[this]
+
+    @staticmethod
+    def insert(vm, this, args):
+        original = vm[this]
+        pos = vm[args[0]]
+        new = vm[args[1]]
+        vm[this] = original[:pos] + new + original[pos:]
         vm.return_v = vm[this]
 
     @staticmethod

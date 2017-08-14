@@ -347,3 +347,34 @@ if ret:
     print(">>> '%s'" % ret)
 else:
     print('Not result.')
+
+    # new - instance v0, Ljava / lang / StringBuilder
+
+    # invoke - direct {v0}, Ljava / lang / StringBuilder
+    # -> < init > ()V
+
+    # const / 4 v1, 0x0
+
+    # sget - object v2, Lcom / mbah / wtez / D
+    # ->j:
+    #     Ljava / lang / String
+
+    # invoke - virtual {v0, v1, v2}, Ljava / lang / StringBuilder
+    # ->insert(ILjava / lang / String
+    #          )Ljava / lang / StringBuilder
+
+print('\n\nTesting Ljava/lang/StringBuilder;->insert(ILjava/lang/String;)Ljava/lang/StringBuilder; ... ')
+snippet = [
+    'new-instance v0, Ljava/lang/StringBuffer;',
+    'const-string v3, "xxxxxx"',
+    'invoke-direct {v0, v3}, Ljava/lang/StringBuffer;-><init>(Ljava/lang/String;)V',
+    'const/4 v1, 0x1',
+    'const-string v2, "OO"',
+    'invoke-virtual {v0, v1, v2}, Ljava/lang/StringBuilder;->insert(ILjava/lang/String;)Ljava/lang/StringBuilder;'
+]
+
+ret = emu2.call(snippet, trace=True)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')

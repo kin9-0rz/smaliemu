@@ -12,6 +12,7 @@ class StringBuilder:
             '<init>(Ljava/lang/String;)V': StringBuilder.init_from_string,
             'append(Ljava/lang/String;)Ljava/lang/StringBuilder;': StringBuilder.append,
             'append(C)Ljava/lang/StringBuilder;': StringBuilder.append,
+            'insert(ILjava/lang/String;)Ljava/lang/StringBuilder;': StringBuilder.insert,
             'toString()Ljava/lang/String;': StringBuilder.tostring
         }
 
@@ -31,6 +32,14 @@ class StringBuilder:
     @staticmethod
     def append(vm, this, args):
         vm[this] += vm[args[0]]
+        vm.return_v = vm[this]
+
+    @staticmethod
+    def insert(vm, this, args):
+        original = vm[this]
+        pos = vm[args[0]]
+        new = vm[args[1]]
+        vm[this] = original[:pos] + new + original[pos:]
         vm.return_v = vm[this]
 
     @staticmethod
