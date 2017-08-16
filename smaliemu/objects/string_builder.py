@@ -26,13 +26,13 @@ class StringBuilder:
 
     @staticmethod
     def init_from_string(vm, this, args):
-        vm.return_v = vm[args[0]]
-        vm[this] = vm[args[0]]
+        vm.result = vm[args[0]]
+        vm[this] = vm.result
 
     @staticmethod
     def append(vm, this, args):
         vm[this] += vm[args[0]]
-        vm.return_v = vm[this]
+        vm.result = vm[this]
 
     @staticmethod
     def insert(vm, this, args):
@@ -40,8 +40,8 @@ class StringBuilder:
         pos = vm[args[0]]
         new = vm[args[1]]
         vm[this] = original[:pos] + new + original[pos:]
-        vm.return_v = vm[this]
+        vm.result = vm[this]
 
     @staticmethod
     def tostring(vm, this, args):
-        vm.return_v = vm[this]
+        vm.result = vm[this]

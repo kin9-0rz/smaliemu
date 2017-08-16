@@ -20,7 +20,10 @@
 from smaliemu.object_mapping import ObjectMapping
 
 # The virtual machine used by the emulator.
+
+
 class VM(object):
+
     def __init__(self, emulator):
         # we need the emulator instance in order to call its 'fatal' method.
         self.emu = emulator
@@ -74,7 +77,6 @@ class VM(object):
         # nope, report unhandled exception
         # self.emu.fatal("Unhandled exception '%s'." % str(e))
         # raise RuntimeError("Unhandled exception '%s'." % str(e))
-
 
     def new_instance(self, klass):
         return self.mapping.new_instance(self, klass)

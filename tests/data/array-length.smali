@@ -6,3 +6,4 @@ const/16 l, 0
 invoke-virtual {s}, Ljava/lang/String;->toCharArray()[C
 move-result a
 array-length l, a
+return-object a

@@ -52,28 +52,30 @@ class String:
         for item in vm[args[0]]:
             chs.append(chr(item))
         vm[this] = "".join(chs)
+        vm.result = vm[this]
 
     @staticmethod
     def init_from_char_array(vm, this, args):
         vm[this] = "".join(vm[args[0]])
+        vm.result = vm[this]
 
     @staticmethod
     def charat(vm, this, args):
         idx = vm[args[0]]
         obj = vm[this]
-        vm.return_v = obj[idx]
+        vm.result = obj[idx]
 
     @staticmethod
     def tochararray(vm, this, args):
-        vm.return_v = list(vm[this])
+        vm.result = list(vm[this])
 
     @staticmethod
     def valueof(vm, this, args):
-        vm.return_v = vm[this]
+        vm.result = vm[this]
 
     @staticmethod
     def substring(vm, this, args):
         start = vm[args[0]]
         end = vm[args[1]]
-        vm.return_v = vm[this][start:end]
-        vm[this] = vm.return_v
+        vm.result = vm[this][start:end]
+        vm[this] = vm.result

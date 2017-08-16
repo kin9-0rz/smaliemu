@@ -47,13 +47,21 @@ class OpCode(object):
             self.eval(
                 vm, *[x if x is not None else x for x in m.groups()])
         except Exception as e:
-            vm.exception(e)
             if vm.thrown:
                 raise e
+            vm.exception(e)
+
+            vm.result = None
+            for key in m.groups():
+                if key in vm.variables:
+                    del vm.variables[key]
+                    break
 
         if OpCode.trace is True:
+            # if True:
             print("%03d %s" % (vm.pc, line))
             print('Registers : ', vm.variables)
+            print('Result    : ', vm.result)
             print('Return    : ', vm.return_v)
 
         return True
@@ -62,12 +70,12 @@ class OpCode(object):
 class op_Const(OpCode):
 
     def __init__(self):
-        OpCode.__init__(self, r'^const(/\d+)? (.+),\s*(.+)')
+        OpCode.__init__(self, r'^const(/\d+)?\s+(.+),\s*(.+)')
 
     @staticmethod
     def eval(vm, _, vx, lit):
         vm[vx] = OpCode.get_int_value(lit)
-        vm.return_v = vm[vx]
+        vm.result = vm[vx]
 
 
 class op_ConstWide(OpCode):
@@ -78,7 +86,7 @@ class op_ConstWide(OpCode):
     @staticmethod
     def eval(vm, _, vx, lit):
         vm[vx] = OpCode.get_int_value(lit)
-        vm.return_v = vm[vx]
+        vm.result = vm[vx]
 
 
 class op_ConstString(OpCode):
@@ -89,7 +97,7 @@ class op_ConstString(OpCode):
     @staticmethod
     def eval(vm, vx, s):
         vm[vx] = s
-        vm.return_v = vm[vx]
+        vm.result = vm[vx]
 
 
 class op_Move(OpCode):
@@ -109,7 +117,7 @@ class op_MoveResult(OpCode):
 
     @staticmethod
     def eval(vm, _, dest):
-        vm[dest] = vm.return_v
+        vm[dest] = vm.result
 
 
 class op_MoveException(OpCode):
@@ -284,6 +292,7 @@ class op_Aget(OpCode):
         arr = vm[vy]
         idx = vm[vz]
         vm[vx] = arr[idx]
+        vm.result = vm[vx]
 
 
 class op_AddIntLit(OpCode):

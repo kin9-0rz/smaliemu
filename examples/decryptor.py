@@ -39,49 +39,6 @@ args = {
 # print("'%s'" % ret)
 
 emu2 = Emulator()
-#
-# snippet = ['const/4 v1, 0x0', 'const-string v2, "z"',
-#            'invoke-virtual {v2, v1}, Ljava/lang/String;->charAt(I)C']
-# ret = emu2.call(snippet)
-# print("'%s'" % ret)
-#
-# snippet = [
-#     'const/4 v4, 0x1',
-#     'const/4 v3, 0x0',
-#     'new-instance v0, Ljava/lang/String;',
-#     'new-array v1, v4, [B',
-#     'const/16 v2, 0x44',
-#     'aput-byte v2, v1, v3',
-#     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
-#     'return-object v0'
-# ]
-# ret = emu2.call(snippet)
-# print("'%s'" % ret)
-
-
-snippet = [
-    'const/4 v4, 0x1',
-    'const/4 v3, 0x0',
-    'new-instance v0, Ljava/lang/String;',
-    'const/4 v1, 0x2',
-    'new-array v1, v1, [B',
-    'fill-array-data v1, :array_5a',
-    'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
-    'return-object v0',
-    ':array_5a',
-    '.array-data 1',
-    '0x44t',
-    '0x45t',
-    '.end array-data',
-    ':array_5b',
-    '.array-data 1',
-    '-0x44t',
-    '-0x45t',
-    '.end array-data'
-
-]
-ret = emu2.call(snippet)
-print("'%s'" % ret)
 
 # snippet = [
 #     'const/4 v4, 0x0',
@@ -327,7 +284,8 @@ snippet = [
     'const-string v1, "com.install.service.store"',
     'const/4 v2, 0x0',
     'const/16 v3, 0x10',
-    'invoke-virtual {v1, v2, v3}, Ljava/lang/String;->substring(II)Ljava/lang/String;'
+    'invoke-virtual {v1, v2, v3}, Ljava/lang/String;->substring(II)Ljava/lang/String;',
+    'return-object v1'
 ]
 
 ret = emu2.call(snippet, trace=True)
@@ -340,6 +298,7 @@ else:
 print('\n\nTesting String startswith space ... ')
 snippet = [
     'const-string v1, "  com.install.service. store "',
+    'return-object v1'
 ]
 
 ret = emu2.call(snippet, trace=True)
@@ -370,10 +329,24 @@ snippet = [
     'invoke-direct {v0, v3}, Ljava/lang/StringBuffer;-><init>(Ljava/lang/String;)V',
     'const/4 v1, 0x1',
     'const-string v2, "OO"',
-    'invoke-virtual {v0, v1, v2}, Ljava/lang/StringBuilder;->insert(ILjava/lang/String;)Ljava/lang/StringBuilder;'
+    'invoke-virtual {v0, v1, v2}, Ljava/lang/StringBuilder;->insert(ILjava/lang/String;)Ljava/lang/StringBuilder;',
+    'return-object v0'
 ]
 
 ret = emu2.call(snippet, trace=True)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+print('\n\nTesting register clear ... ')
+snippet = [
+    'const-string v1, "google_services.zip"',
+    'sget-object v1, Lcom/install/service/store/MainActivity;->c:Ljava/lang/String;',
+    'invoke-static {v1}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+    'return-object v1'
+]
+ret = emu2.call(snippet, trace=True, thrown=False)
 if ret:
     print(">>> '%s'" % ret)
 else:

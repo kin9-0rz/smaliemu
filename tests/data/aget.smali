@@ -7,3 +7,4 @@ const/16 v, 0
 invoke-virtual {s}, Ljava/lang/String;->toCharArray()[C
 move-result a
 aget v, a, i
+return-object a
