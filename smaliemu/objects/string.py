@@ -35,6 +35,7 @@ class String:
             'toCharArray()[C': String.tochararray,
             'intern()Ljava/lang/String;': String.repr_intern,
             'valueOf(Ljava/lang/Object;)Ljava/lang/String;': String.valueof,
+            'replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;': String.replace,
             'substring(II)Ljava/lang/String;': String.substring
         }
 
@@ -79,3 +80,7 @@ class String:
         end = vm[args[1]]
         vm.result = vm[this][start:end]
         vm[this] = vm.result
+
+    @staticmethod
+    def replace(vm, this, args):
+        vm.result = vm[this].replace(vm[args[0]], vm[args[1]])
