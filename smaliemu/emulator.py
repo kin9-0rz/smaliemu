@@ -180,7 +180,7 @@ class Emulator(object):
 
         return self.vm.return_v
 
-    def call(self, snippet, trace=False, thrown=True):
+    def call(self, snippet, args={}, trace=False, thrown=True):
         """
         Load a smali file and start emulating it.
         :param snippet: codes snippet in smali format
@@ -189,12 +189,15 @@ class Emulator(object):
         :return: The return value of the emulated method or None if no return-*
                  opcode was executed.
         """
+
         OpCode.trace = trace
         self.snippet = Snippet(snippet)
         self.vm = VM(self)
         self.stats = Stats(self)
         self.vm.return_v = None
         self.vm.thrown = thrown
+
+        self.vm.variables.update(args)
 
         self.vm.variables.copy()
 

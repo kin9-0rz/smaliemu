@@ -33,10 +33,10 @@ args = {
     'p1': 19
 }
 
-# ret = emu.run(filename, args)
-# print(emu.stats)
-# print("RESULT:\n")
-# print("'%s'" % ret)
+ret = emu.run(filename, args)
+print(emu.stats)
+print("RESULT: %s" % ret)
+print('-' * 100)
 
 emu2 = Emulator()
 
@@ -347,6 +347,168 @@ snippet = [
     'return-object v1'
 ]
 ret = emu2.call(snippet, trace=True, thrown=False)
+if ret:
+    print(">>> '%s'" % ret)
+else:
+    print('Not result.')
+
+
+print('\n\nTesting  ... ')
+# Arguments for the method.
+args = {
+    'p0': 0x4F,
+    'p1': 7,
+    'p2': 0x35
+}
+snippet = [
+    # '.class public Lcom/ice/jake/a;',
+    # '.super Ljava/lang/Object;',
+    # '.field private static final f:[S',
+    # direct methods
+    '.registers 1',
+    'const/16 v0, 0x60',
+    'new-array v0, v0, [S',
+    'fill-array-data v0, :array_e',
+    'sput-object v0, Lcom/ice/jake/a;->f:[S',
+    # 'return-void',
+
+    '.method private static a(III)Ljava/lang/String;',
+    '.registers 12',
+    'add-int/lit8 v0, p2, 0x20',
+    'new-instance v5, Ljava/lang/String;',
+    'add-int/lit8 v1, p0, 0x4',
+    'add-int/lit8 v6, p1, 0x1',
+    'const/4 v3, 0x0',
+    'sget-object v7, Lcom/ice/jake/a;->f:[S',
+    'new-array v2, v6, [C',
+    'if-nez v7, :cond_28',
+    'move v4, v1',
+    ':goto_10',
+    'add-int/2addr v0, v1',
+    'add-int/lit16 v1, v0, 0x101c',
+    'move v0, v3',
+    ':goto_14',
+    'int-to-char v8, v1',
+    'add-int/lit8 v3, v0, 0x1',
+    'aput-char v8, v2, v0',
+    'add-int/lit8 v4, v4, 0x1',
+    'if-ne v3, v6, :cond_25',
+    'invoke-direct {v5, v2}, Ljava/lang/String;-><init>([C)V',
+    'invoke-virtual {v5}, Ljava/lang/String;->intern()Ljava/lang/String;',
+    'move-result-object v0',
+    'return-object v0',
+    ':cond_25',
+    'aget-short v0, v7, v4',
+    'goto :goto_10',
+    ':cond_28',
+    'move v4, v1',
+    'move v1, v0',
+    'move v0, v3',
+    'goto :goto_14',
+
+    ':array_e',
+    '.array-data 2',
+    '0x54s',
+    '0x75s',
+    '-0x1fs',
+    '-0x8s',
+    '-0x1001s',
+    '-0x1028s',
+    '-0x101fs',
+    '-0x1009s',
+    '-0x102bs',
+    '-0x101ds',
+    '-0x1029s',
+    '-0x1020s',
+    '-0x101as',
+    '-0x100bs',
+    '-0x1021s',
+    '-0x1019s',
+    '-0x1029s',
+    '-0x100es',
+    '-0x1060s',
+    '-0xfe2s',
+    '-0x1018s',
+    '-0x1028s',
+    '-0x1016s',
+    '-0x101es',
+    '-0x100es',
+    '-0x8dbs',
+    '-0x1706s',
+    '-0x86es',
+    '-0x16d1s',
+    '0x1b92s',
+    '-0x3feas',
+    '-0x8dbs',
+    '0x2bdds',
+    '-0x395bs',
+    '-0x395bs',
+    '-0x22acs',
+    '0x23d8s',
+    '0x62f9s',
+    '-0x8dbs',
+    '-0x1706s',
+    '-0x86es',
+    '-0x16d1s',
+    '0x3dbs',
+    '-0x2488s',
+    '-0x8dbs',
+    '-0x1706s',
+    '-0x86es',
+    '-0x16d1s',
+    '-0xb38s',
+    '0x102as',
+    '0x362s',
+    '-0x361ds',
+    '-0x1013s',
+    '-0x1027s',
+    '-0x100as',
+    '-0x101cs',
+    '-0x103fs',
+    '-0x100bs',
+    '-0x1009s',
+    '-0x1028s',
+    '-0x104as',
+    '-0x86es',
+    '-0x16d1s',
+    '-0xa01s',
+    '0x23d8s',
+    '0x62f9s',
+    '-0x8dbs',
+    '-0x1706s',
+    '-0x86es',
+    '-0x16d1s',
+    '-0x1518s',
+    '-0xb95s',
+    '-0x13eas',
+    '-0x5cs',
+    '-0x8dbs',
+    '-0x1706s',
+    '-0x86es',
+    '-0x16d1s',
+    '-0x62f8s',
+    '-0x2457s',
+    '0x2dbcs',
+    '-0x395bs',
+    '-0x101cs',
+    '-0x101cs',
+    '-0x1001s',
+    '-0x1028s',
+    '-0x101fs',
+    '-0x1009s',
+    '-0x1027s',
+    '-0x1017s',
+    '-0x1023s',
+    '-0x86es',
+    '-0x16d1s',
+    '-0x62f1s',
+    '-0xfeds',
+    '-0x101cs',
+    '.end array-data',
+    '.end method'
+
+]
+ret = emu2.call(snippet, args, trace=True)
 if ret:
     print(">>> '%s'" % ret)
 else:

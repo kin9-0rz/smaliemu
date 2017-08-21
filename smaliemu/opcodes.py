@@ -305,6 +305,16 @@ class op_AddIntLit(OpCode):
         vm[vx] = eval("%s + %s" % (vm[vy], lit))
 
 
+class op_AddInt2Addr(OpCode):
+
+    def __init__(self):
+        OpCode.__init__(self, r'^add-int/2addr (.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy):
+        vm[vx] += int(vm[vy])
+
+
 class op_MulIntLit(OpCode):
 
     def __init__(self):
