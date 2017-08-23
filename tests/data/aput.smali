@@ -12,6 +12,7 @@ const/16 size,3
 
 new-array a, size, dummy
 
+
 aput va,a,ia
 aput vb,a,ib
 aput vc,a,ic

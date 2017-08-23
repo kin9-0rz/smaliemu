@@ -79,7 +79,6 @@ class String:
         start = vm[args[0]]
         end = vm[args[1]]
         vm.result = vm[this][start:end]
-        vm[this] = vm.result
 
     @staticmethod
     def replace(vm, this, args):

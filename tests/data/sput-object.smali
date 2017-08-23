@@ -4,8 +4,8 @@
 
 const-string va, "Hello"
 
-sput va, statMember
+sput-object va, statMember
 
-sget vb, statMember
+sget-object vb, statMember
 
 return-object vb

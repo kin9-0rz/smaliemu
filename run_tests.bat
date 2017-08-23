@@ -1,1 +1,1 @@
-python tests\run.py
+python tests\run.py %*

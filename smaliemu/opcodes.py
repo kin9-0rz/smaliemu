@@ -282,6 +282,30 @@ class op_ArrayFillData(OpCode):
         vm[vx] = vm.array_data[label]["elements"]
 
 
+class op_IputBoolean(OpCode):
+    # iput-boolean v0, p0, Lcom/a;->a:Z
+
+    def __init__(self):
+        OpCode.__init__(self, r'^iput-boolean\s*(.+),\s*(.+),\s*(.+)$')
+
+    @staticmethod
+    def eval(vm, vx, _, vz):
+        vm[vz] = vm[vx]
+        vm.result = vm[vz]
+
+
+class op_IgetBoolean(OpCode):
+    # iput-boolean v0, p0, Lcom/a;->a:Z
+
+    def __init__(self):
+        OpCode.__init__(self, r'^iget-boolean\s*(.+),\s*(.+),\s*(.+)$')
+
+    @staticmethod
+    def eval(vm, vx, _, vz):
+        vm[vx] = vm[vz]
+        vm.result = vm[vx]
+
+
 class op_Aget(OpCode):
 
     def __init__(self):
@@ -303,6 +327,10 @@ class op_AddIntLit(OpCode):
     @staticmethod
     def eval(vm, vx, vy, lit):
         vm[vx] = eval("%s + %s" % (vm[vy], lit))
+
+        # import ast
+        # # vm[vx]=eval("%s + %s" % (vm[vy], lit))
+        # print(vm[vx], ast.literal_eval("%s + %s" % (vm[vy], lit)))
 
 
 class op_AddInt2Addr(OpCode):
@@ -399,6 +427,48 @@ class op_AndInt(OpCode):
         vm[vx] = vm[vy] & vm[vz]
 
 
+class op_AndIntLit(OpCode):
+    # and-int/lit8 v0, v0, 0x17
+
+    def __init__(self):
+        OpCode.__init__(self, r'^and-int/lit\d+ (.+),\s*(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy, lit):
+        vm[vx] = vm[vy] & OpCode.get_int_value(lit)
+        vm.result = vm[vx]
+
+
+class op_NegInt(OpCode):
+
+    def __init__(self):
+        OpCode.__init__(self, r'^neg-int (.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy):
+        vm[vx] = -vm[vy]
+
+
+class op_UshrInt(OpCode):
+
+    def __init__(self):
+        OpCode.__init__(self, r'^ushr-int (.+),\s*(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy, vz):
+        vm[vx] = vm[vy] >> vm[vz]
+
+
+class op_UshrIntLit(OpCode):
+
+    def __init__(self):
+        OpCode.__init__(self, r'^ushr-int/lit\d+\s*(.+),\s*(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy, lit):
+        vm[vx] = vm[vy] >> OpCode.get_int_value(lit)
+
+
 class op_OrInt(OpCode):
 
     def __init__(self):
@@ -407,6 +477,16 @@ class op_OrInt(OpCode):
     @staticmethod
     def eval(vm, vx, vy, vz):
         vm[vx] = vm[vy] | vm[vz]
+
+
+class op_OrIntLit(OpCode):
+
+    def __init__(self):
+        OpCode.__init__(self, r'^or-int/lit\d+ (.+),\s*(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, vy, lit):
+        vm[vx] = vm[vy] | OpCode.get_int_value(lit)
 
 
 class op_GoTo(OpCode):
@@ -430,6 +510,11 @@ class op_NewInstance(OpCode):
 
 
 class op_NewArray(OpCode):
+    '''new-array vx,vy,type_id
+
+    Generates a new array of type_id type and vy element size and puts the
+    reference to the array into vx.
+    '''
 
     def __init__(self):
         OpCode.__init__(self, r'^new-array (.+),\s*(.+),\s*(.+)')
@@ -440,6 +525,11 @@ class op_NewArray(OpCode):
 
 
 class op_APut(OpCode):
+    '''aput vx,vy,vz
+
+    Puts the integer value in vx into an element of an integer array.
+    The element is indexed by vz, the array object is referenced by vy.
+    '''
 
     def __init__(self):
         OpCode.__init__(self, r'^aput(-[a-z]+)? (.+),\s*(.+),\s*(.+)')
@@ -485,7 +575,7 @@ class op_IntToType(OpCode):
             raise RuntimeError("Unsupported type '%s'." % ctype)
 
 
-class op_SPut(OpCode):
+class op_SPutObject(OpCode):
 
     def __init__(self):
         # sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
@@ -497,7 +587,31 @@ class op_SPut(OpCode):
         vm.variables[staticVariableName] = vm.variables[vx]
 
 
+class op_SPut(OpCode):
+
+    def __init__(self):
+        # const/16 v0, 0xed
+        # sput v0, Lcom/a;->g:I
+        OpCode.__init__(self, r'^sput\s(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, staticVariableName):
+        vm.variables[staticVariableName] = vm.variables[vx]
+
+
 class op_SGet(OpCode):
+
+    def __init__(self):
+        # sget v0, Lcom/a;->g:I
+        OpCode.__init__(self, r'^sget+\s(.+),\s*(.+)')
+
+    @staticmethod
+    def eval(vm, vx, staticVariableName):
+        vm.variables[vx] = vm.variables[staticVariableName]
+        vm.result = vm.variables[vx]
+
+
+class op_SGetObject(OpCode):
 
     def __init__(self):
         # sput-object v9, Lcom/whatsapp/messaging/a;->z:[Ljava/lang/String;
@@ -507,6 +621,7 @@ class op_SGet(OpCode):
     @staticmethod
     def eval(vm, vx, staticVariableName):
         vm.variables[vx] = vm.variables[staticVariableName]
+        vm.result = vm.variables[vx]
 
 
 class op_Return(OpCode):

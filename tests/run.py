@@ -18,79 +18,85 @@
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 from collections import OrderedDict
-import sys, os, fnmatch, time, traceback
+import sys
+import os
+import fnmatch
+import time
+import traceback
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from smaliemu.emulator import Emulator
 
 
-
 def get_data_files(file_filter):
-    files = []
-    datapath = os.path.join( os.path.dirname(__file__), 'data' )
+    file_list = []
+    datapath = os.path.join(os.path.dirname(__file__), 'data')
 
-    for root, dirnames, filenames in os.walk(datapath):
+    for root, _, filenames in os.walk(datapath):
         for filename in fnmatch.filter(filenames, '*.smali'):
             if file_filter is None or file_filter in filename:
-                files.append( os.path.join( root, filename ) )
+                file_list.append(os.path.join(root, filename))
 
-    return files
+    return file_list
 
-def run_data_file(datafile):
+
+def run_data_file(data_file):
     emu = Emulator()
-    ret = emu.run(datafile)
-    out = emu.vm.variables.copy()
-    out.update({'ret': ret})
-    return str(OrderedDict(sorted(out.items()))).replace('OrderedDict([(', '{').replace(')])', '}').replace("',", "':").replace("), (", ', ')
+    ret = emu.run(data_file)
+    outx = emu.vm.variables.copy()
+    outx.update({'ret': ret})
+    return str(OrderedDict(sorted(outx.items()))).replace('OrderedDict([(', '{').replace(')])', '}').replace("',", "':").replace("), (", ', ')
 
-def get_desired_output(datafile):
-    return open(datafile).read().split("\n")[0][1:].strip()
+
+def get_desired_output(data_file):
+    return open(data_file).read().split("\n")[0][1:].strip()
+
 
 def ppassed():
     print("\x1b[32mPASSED\x1b[0m")
 
-def pfail(test,out):
-    print("\x1b[31mFAILED\x1b[0m\n")
-    print("  Expected : %s" % test)
-    print("  Got      : %s" % out)
-    print()
 
-def pexception(e):
+def pfail(expected, got):
     print("\x1b[31mFAILED\x1b[0m\n")
+    print("  Expected : %s" % expected)
+    print("  Got      : %s" % got)
+
+
+def pexception():
+    print("\x1b[31mFAILED\x1b[0m\nsdsdsd")
     print(traceback.format_exc())
 
-file_filter = sys.argv[1] if len(sys.argv) == 2 else None
-files = get_data_files(file_filter)
-total = len(files)
-passed = 0
-failed = 0
-exceptions = 0
-start = time.time() * 1000
-just = len(max(files, key=len))
+if __name__ == '__main__':
+    ffilter = sys.argv[1] if len(sys.argv) == 2 else None
+    files = get_data_files(ffilter)
+    total = len(files)
+    passed = 0
+    failed = 0
+    exceptions = 0
+    start = time.time() * 1000
+    just = len(max(files, key=len))
 
-for datafile in files:
-    sys.stdout.write( "Testing %s : " % datafile.ljust(just) )
+    for datafile in files:
+        sys.stdout.write("Testing %s : " % datafile.ljust(just))
 
-    try:
-        out = run_data_file(datafile)
-        test = get_desired_output(datafile)
+        try:
+            out = run_data_file(datafile)
+            test = get_desired_output(datafile)
 
-        if out == test:
-            ppassed()
-            passed += 1
-        else:
-            pfail( test, out )
-            failed += 1
+            if out == test:
+                ppassed()
+                passed += 1
+            else:
+                pfail(test, out)
+                failed += 1
 
-    except Exception as e:
-        pexception(e)
-        exceptions += 1
+        except Exception:
+            exceptions += 1
 
-elapsed = ( time.time() * 1000 ) - start
+    elapsed = (time.time() * 1000) - start
 
-print()
-print("Total Tests : %d" % total)
-print("Passed      : %d" % passed)
-print("Failed      : %d ( %d exceptions )" % ( failed, exceptions ))
-print("Total Time  : %f ms" % elapsed)
-print("Average     : %f ms / test" % ( elapsed / float(total) ))
+    print("Total Tests : %d" % total)
+    print("Passed      : %d" % passed)
+    print("Failed      : %d ( %d exceptions )" % (failed, exceptions))
+    print("Total Time  : %f ms" % elapsed)
+    print("Average     : %f ms / test" % (elapsed / float(total)))
