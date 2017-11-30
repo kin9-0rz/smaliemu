@@ -25,13 +25,13 @@ snippet = [
     'invoke-direct {v0, v1}, Ljava/lang/String;-><init>([B)V',
     'return-object v0'
 ]
-ret = emu2.call(snippet)
+ret = emu.call(snippet)
 print("'%s'" % ret)
 ```
 
-print
+#### Console Output
 ```
-'DE'
+'D'
 ```
 ---
 
