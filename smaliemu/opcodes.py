@@ -570,9 +570,12 @@ class op_IntToType(OpCode):
     def eval(vm, ctype, vx, vy):
         if ctype == 'char':
             vm[vx] = chr(vm[vy] & 0xFF)
-
+        elif ctype == 'byte':
+            vm[vx] = vm[vy]
+        elif ctype == 'short':
+            vm[vx] = vm[vy]
         else:
-            raise RuntimeError("Unsupported type '%s'." % ctype)
+            raise RuntimeError("op_IntToType: Unsupported type '%s'." % ctype)
 
 
 class op_SPutObject(OpCode):

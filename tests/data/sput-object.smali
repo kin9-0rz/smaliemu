@@ -1,11 +1,11 @@
-# {'ret': 'Hello', 'statMember': 'Hello', 'va': 'Hello', 'vb': 'Hello'}
+# {'La;->statMember': 'Hello', 'ret': 'Hello', 'va': 'Hello', 'vb': 'Hello'}
 
-.field private static final statMember:Ljava/lang/String;
+.field private static final La;->statMember:Ljava/lang/String;
 
 const-string va, "Hello"
 
-sput-object va, statMember
+sput-object va, La;->statMember
 
-sget-object vb, statMember
+sget-object vb, La;->statMember
 
 return-object vb

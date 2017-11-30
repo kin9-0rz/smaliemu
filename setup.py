@@ -4,7 +4,7 @@ from setuptools import setup
 if __name__ == "__main__":
     setup(
         name="smaliemu",
-        version="0.1.7",
+        version="0.1.8",
         description=("smaliemu"),
 
         packages=[
