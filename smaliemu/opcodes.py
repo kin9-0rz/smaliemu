@@ -34,7 +34,7 @@ class OpCode(object):
 
         # handle comments
         if '#' in val:
-            val = val.split('#')[1]
+            val = val.split('#')[0]
 
         if ptn.match(val):
             return int(val[:-1], 16)
