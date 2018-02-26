@@ -31,6 +31,11 @@ class OpCode(object):
     @staticmethod
     def get_int_value(val):
         ptn = re.compile(r'-?0x\w+?[ts]')
+
+        # handle comments
+        if '#' in val:
+            val = val.split('#')[0]
+
         if ptn.match(val):
             return int(val[:-1], 16)
         elif "0x" in val:
