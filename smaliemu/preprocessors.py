@@ -36,7 +36,7 @@ class TryCatchPreprocessor:
         #
         #   .catch Ljava/lang/Exception; {:try_start_BLOCK_ID .. :try_end_BLOCK_ID} :LABEL
         #
-        expression = '^\.catch [^\s]+ \{:try_start_%s[ \.]+:try_end_%s\}\s*(\:.+)' % (block_id,block_id )
+        expression = r'^\.catch [^\s]+ \{:try_start_%s[ \.]+:try_end_%s\}\s*(\:.+)' % (block_id,block_id )
         for nindex, nline in enumerate(lines[index + 1:]):
             # TODO: Save exception type for specific catch.
             m = re.search( expression, nline)

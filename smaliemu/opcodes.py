@@ -71,6 +71,9 @@ class OpCode(object):
 
         return True
 
+    @staticmethod
+    def eval(vm, *args):
+        pass
 
 class op_Const(OpCode):
 
