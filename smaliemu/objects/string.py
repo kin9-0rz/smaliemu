@@ -36,7 +36,8 @@ class String:
             'intern()Ljava/lang/String;': String.repr_intern,
             'valueOf(Ljava/lang/Object;)Ljava/lang/String;': String.valueof,
             'replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;': String.replace,
-            'substring(II)Ljava/lang/String;': String.substring
+            'substring(II)Ljava/lang/String;': String.substring,
+            'equals(Ljava/lang/Object;)Z': String.equals
         }
 
     @staticmethod
@@ -50,6 +51,8 @@ class String:
     @staticmethod
     def init_from_byte_array(vm, this, args):
         chs = []
+        print(args[0])
+        print(vm[args[0]])
         for item in vm[args[0]]:
             chs.append(chr(item))
         vm[this] = "".join(chs)
@@ -83,3 +86,10 @@ class String:
     @staticmethod
     def replace(vm, this, args):
         vm.result = vm[this].replace(vm[args[0]], vm[args[1]])
+    
+    @staticmethod
+    def equals(vm, this, args):
+        if len(args) != 2:
+            vm.result = False
+        else:
+            vm.result = vm[args[0]] is vm[args[1]]

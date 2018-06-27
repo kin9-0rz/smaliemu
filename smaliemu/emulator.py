@@ -180,10 +180,13 @@ class Emulator(object):
 
         return self.vm.return_v
 
-    def call(self, snippet, args={}, trace=False, thrown=True):
+    def call(self, snippet, args={}, cv=False, trace=False, thrown=True):
         """
-        Load a smali file and start emulating it.
+        Load a smali code snippet and start emulating it.
         :param snippet: codes snippet in smali format
+        :param args: A dictionary of optional initialization variables for the
+                     VM, mostly used for arguments.
+        :param cv: clear valiables
         :param trace: If true every opcode being executed will be printed.
         :param thrown: If error, emu will raise exception.
         :return: The return value of the emulated method or None if no return-*
@@ -197,8 +200,13 @@ class Emulator(object):
         self.vm.return_v = None
         self.vm.thrown = thrown
 
-        self.vm.variables.update(args)
+        if cv:
+            self.vm.variables.clear()
+        elif 'ret' in args:
+            self.vm.result = args['ret']
 
+        self.vm.variables.update(args)
+        
         self.vm.variables.copy()
 
         s = time.time() * 1000
@@ -207,18 +215,28 @@ class Emulator(object):
         e = time.time() * 1000
         self.stats.preproc = e - s
 
+
         s = time.time() * 1000
+
+        # 即便smali代码中存在可以停止的循环，也不允许其过于耗时
+        num = len(snippet) * 1.5
+        count = 0
         # Loop each line and emulate.
         while self.vm.stop is False and self.snippet.has_line(self.vm.pc):
+            if count >= num:
+                break
+            count += 1
             self.stats.steps += 1
             line = self.snippet[self.vm.pc]
             self.vm.pc += 1
 
             if self.__should_skip_line(line):
                 continue
-
-            elif self.__parse_line(line) is False and thrown:
-                raise UnsupportedOpcodeError(self.get_error_line())
+            try:
+                self.__parse_line(line)
+            except Exception as ex:
+                print(ex)
+                print(self.get_error_line())
 
         e = time.time() * 1000
         self.stats.execution = e - s

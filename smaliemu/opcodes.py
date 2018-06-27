@@ -21,6 +21,7 @@ import re
 # Base class for all Dalvik opcodes (see
 # http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html).
 
+from abc import abstractstaticmethod
 
 class OpCode(object):
     trace = False
@@ -71,7 +72,7 @@ class OpCode(object):
 
         return True
 
-    @staticmethod
+    @abstractstaticmethod
     def eval(vm, *args):
         pass
 
@@ -321,10 +322,13 @@ class op_Aget(OpCode):
 
     @staticmethod
     def eval(vm, vx, vy, vz):
-        arr = vm[vy]
-        idx = vm[vz]
-        vm[vx] = arr[idx]
-        vm.result = vm[vx]
+        try:
+            arr = vm[vy]
+            idx = vm[vz]
+            vm[vx] = arr[idx]
+            vm.result = vm[vx]
+        except KeyError:
+            pass
 
 
 class op_AddIntLit(OpCode):
@@ -673,8 +677,11 @@ class op_PackedSwitch(OpCode):
         val = vm[vx]
         switch = vm.packed_switches.get(table, {})
         cases = switch.get('cases', [])
-        case_idx = val - switch.get('first_value')
+        first_value = switch.get('first_value')
+        if not first_value:
+            return
 
+        case_idx = val - first_value
         if case_idx >= len(cases) or case_idx < 0:
             return
 
