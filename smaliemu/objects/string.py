@@ -51,8 +51,6 @@ class String:
     @staticmethod
     def init_from_byte_array(vm, this, args):
         chs = []
-        print(args[0])
-        print(vm[args[0]])
         for item in vm[args[0]]:
             chs.append(chr(item))
         vm[this] = "".join(chs)
